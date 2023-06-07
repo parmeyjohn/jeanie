@@ -1,8 +1,13 @@
 "use client"
 import Link from "next/link";
+import { usePathname } from 'next/navigation';
+
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { useState } from "react";
+import firebase from 'firebase/compat/app';
+import * as firebaseui from 'firebaseui'
+import 'firebaseui/dist/firebaseui.css'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,6 +21,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  
   const [showSearch, setShowSearch] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -119,9 +126,13 @@ export default function RootLayout({
               </svg>
               3
             </Link>
-            <button className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex">
-              Sign in
-            </button>
+            {pathname !== "/login" &&
+              <Link href='/login' className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex">
+                Sign in
+              </Link>
+            }
+            
+            
           </div>
         </nav>
         {children}
