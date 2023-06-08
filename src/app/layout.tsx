@@ -7,8 +7,9 @@ import { Inter } from "next/font/google";
 import { useState } from "react";
 import firebase from 'firebase/compat/app';
 import * as firebaseui from 'firebaseui'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import 'firebaseui/dist/firebaseui.css'
-
+import {auth} from '../../firebase.config'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -22,7 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  
+  const [user, loading, error] = useAuthState(auth);
+  console.log(user)
   const [showSearch, setShowSearch] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -74,8 +76,8 @@ export default function RootLayout({
               All
             </Link>
             <Link
-              href=""
-              className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
+              href="/men"
+              className={`${pathname === "/men" ? "bg-red-200" : "" } font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 rounded-md hover:font-semibold`}
             >
               Men
             </Link>
@@ -126,7 +128,7 @@ export default function RootLayout({
               </svg>
               3
             </Link>
-            {pathname !== "/login" &&
+            {pathname !== "/login" && user === undefined &&
               <Link href='/login' className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex">
                 Sign in
               </Link>
