@@ -1,21 +1,17 @@
 'use client'
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
-import { auth, storage, db } from '../../../firebase.config'
+import { auth, storage, db } from '../../../../firebase.config'
 import { doc, getDocs, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import ProductCard from "../productCard";
-interface Product {
-    category: string,
-    name: string, 
-    color: string, 
-    img_path: string,
-    price: number
-}
+import ProductCard from "./../productCard";
+import { Product } from "../../../../types"
+import Link from "next/link";
 
-export default function Men() {
+export default function WomensClothing() {
     const [imgUrl, setImgUrl] = useState('')
     const [products, setProducts] = useState(Array<Product>)
+    const [categories, setCategories] = useState(Array<String>)
     useEffect(() => {
         //getImages().then((res) => setImgUrl(res))
         //console.log(productsRef)
@@ -30,8 +26,12 @@ export default function Men() {
         query.forEach((doc) => productArray.push(doc.data() as Product))
         console.log(productArray)
         setProducts(productArray)
-
+        var m = new Set(productArray.map(p => p.category))
+        setCategories(Array.from(m.values()))
+        console.log('categories', m)
     }
+
+
     const getImages = async () => {
         //TODO: plug in individual component file here
         const storageRef = ref(storage, 'pants/men_pants');
@@ -45,11 +45,24 @@ export default function Men() {
     }
     
     return (
-    <div>
-        <button onClick={() => getImages()}> Get images</button>
-        {imgUrl && <Image width={200} height={200} src={imgUrl} alt='pants'></Image>}
-        {products && 
-            products.map((p) => <div key={p.name}><ProductCard productObj={p}></ProductCard></div>)}
+    <div className="w-full h-full">
+        <div className="absolute left-0 bg-slate-400 rounded-md h-80 p-2">
+            <h3 className="text-md font-medium">
+                Browse:
+            </h3>
+            <div className="ml-2 flex-col">
+                {categories && 
+                    <div></div>
+                }
+            </div>
+
+            
+        </div>
+        <div className="flex max-w-4xl mx-auto flex-wrap">
+            
+            {products && 
+                products.map((p) => <div key={p.id}><ProductCard {...p}></ProductCard></div>)}
+        </div>
     </div>
     )
-}
+};

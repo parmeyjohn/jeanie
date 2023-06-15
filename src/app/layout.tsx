@@ -70,19 +70,13 @@ export default function RootLayout({
               Home
             </Link>
             <Link
-              href=""
-              className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
-            >
-              All
-            </Link>
-            <Link
-              href="/men"
-              className={`${pathname === "/men" ? "bg-red-200" : "" } font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 rounded-md hover:font-semibold`}
+              href="/mens-clothing"
+              className={`${pathname.includes("/mens-clothing") ? "bg-red-200" : "" } font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 rounded-md hover:font-semibold`}
             >
               Men
             </Link>
             <Link
-              href=""
+              href="/womens-clothing"
               className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
             >
               Women
