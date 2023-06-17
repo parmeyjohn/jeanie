@@ -6,8 +6,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Product } from "../../../types"
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function ProductCard({img_path, price, title, main_img, sec_img, id}: Product) {
+  const pathname = usePathname();
   const [productImages, setProductImages] = useState(Array<string>);
   const [imageHovered, setImageHovered] = useState(false)
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function ProductCard({img_path, price, title, main_img, sec_img, 
   };
 
   return (
-    <Link href={`/products/${id}`}>
+    <Link href={`${pathname}/${id}`}>
         <div className="m-4 rounded-xl cursor-pointer">
         <div onMouseLeave={() => setImageHovered(false)} onMouseEnter={() => setImageHovered(true)} className="relative w-60 h-72 transition-all ease-in-out bg-slate-200 rounded-xl flex flex-col justify-center ">  
             {imageHovered ? 
