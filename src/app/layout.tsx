@@ -1,15 +1,15 @@
-"use client"
+"use client";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { useState } from "react";
-import firebase from 'firebase/compat/app';
-import * as firebaseui from 'firebaseui'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import 'firebaseui/dist/firebaseui.css'
-import {auth} from '../../firebase.config'
+import firebase from "firebase/compat/app";
+import * as firebaseui from "firebaseui";
+import { useAuthState } from "react-firebase-hooks/auth";
+import "firebaseui/dist/firebaseui.css";
+import { auth } from "../../firebase.config";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -24,68 +24,94 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
   const [user, loading, error] = useAuthState(auth);
-  console.log(user)
+  console.log(user);
   const [showSearch, setShowSearch] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <html lang="en">
-      <body className={`w-screen h-screen ${inter.className}`}>
-        {showSearch && 
+      <body className={`w-screen h-screen overflow-scroll ${inter.className}`}>
+        {showSearch && (
           <div className=" bg-slate-600 mx-auto absolute z-10 w-full flex justify-center items-center">
             <div className="p-2 m-2 max-w-4xl w-screen flex items-center relative">
-              <input className="w-3xl p-2 w-[80%] rounded-lg"
-              placeholder="Search our products">
-              </input>
+              <input
+                className="w-3xl p-2 w-[80%] rounded-lg"
+                placeholder="Search our products"
+              ></input>
               <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 absolute right-52"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                  />
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 absolute right-52"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
               </svg>
             </div>
-            <button className="font-medium p-2 m-2 text-md transition-all  ease-in-out duration-100 cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
-              onClick={() => setShowSearch(false)}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <button
+              className="font-medium p-2 m-2 text-md transition-all  ease-in-out duration-100 cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
+              onClick={() => setShowSearch(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
-        }
-        
-        <nav className="flex justify-between items-center mx-auto text-black bg-slate-100 max-w-4xl">
+        )}
+
+        <nav className="flex justify-between items-center h-16 mx-auto text-black bg-slate-100 max-w-4xl">
           <div className="flex justify-start">
             <Link
               href=""
-              className="font-medium p-2 m-2 transition-all  ease-in-out duration-100  text-md cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
+              className={
+                "font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300"
+              }
             >
               Home
             </Link>
             <Link
               href="/mens-clothing"
-              className={`${pathname.includes("/mens-clothing") ? "bg-red-200" : "" } font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 rounded-md hover:font-semibold`}
+              className={`${
+                pathname.includes("/mens-clothing")
+                  ? "bg-indigo-300 border border-indigo-500"
+                  : ""
+              } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
             >
               Men
             </Link>
             <Link
               href="/womens-clothing"
-              className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
+              className={`${
+                pathname.includes("/womens-clothing")
+                  ? "bg-indigo-300 border border-indigo-500"
+                  : ""
+              } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
             >
               Women
             </Link>
           </div>
 
           <div className="flex justify-end">
-            <button className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold flex"
-            onClick={() => setShowSearch(true)}>
+            <button
+              className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300"
+              onClick={() => setShowSearch(true)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -101,10 +127,14 @@ export default function RootLayout({
                 />
               </svg>
             </button>
-            
+
             <Link
-              href=""
-              className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold flex"
+              href="/cart"
+              className={`${
+                pathname.includes("/cart")
+                  ? "bg-indigo-300 border border-indigo-500"
+                  : ""
+              } flex font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,21 +152,18 @@ export default function RootLayout({
               </svg>
               3
             </Link>
-            {pathname !== "/login" && user === undefined &&
-              <Link href='/login' className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex">
+            {pathname !== "/login" && user === undefined && (
+              <Link
+                href="/login"
+                className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex"
+              >
                 Sign in
               </Link>
-            }
-            
-            
+            )}
           </div>
         </nav>
-        <div className="h-full w-full">
-          {children}
-          </div>
-        <footer className="w-full h-10 bg-indigo-600">
-
-        </footer>
+        <div className="h-full w-full">{children}</div>
+        <footer className="w-full h-10 bg-indigo-600"></footer>
       </body>
     </html>
   );
