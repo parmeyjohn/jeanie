@@ -30,7 +30,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`w-screen h-screen ${inter.className}`}>
         {showSearch && 
           <div className=" bg-slate-600 mx-auto absolute z-10 w-full flex justify-center items-center">
             <div className="p-2 m-2 max-w-4xl w-screen flex items-center relative">
@@ -131,7 +131,12 @@ export default function RootLayout({
             
           </div>
         </nav>
-        {children}
+        <div className="h-full w-full">
+          {children}
+          </div>
+        <footer className="w-full h-10 bg-indigo-600">
+
+        </footer>
       </body>
     </html>
   );
