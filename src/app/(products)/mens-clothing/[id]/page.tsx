@@ -15,7 +15,7 @@ export default async function ProductPage({ params }: any) {
   const product = (await getProduct(params.id)) || {};
 
   return (
-    <div className="w-full h-full bg-gradient-to-t from-indigo-200 to-indigo-100 flex justify-center">
+    <div className="w-full h-full bg-gradient-to-t from-indigo-200 to-indigo-50 flex justify-center">
       <div className="w-full max-w-4xl flex justify-between p-8">
         <div className="flex">
           <div className="relative w-80 h-80">
