@@ -3,12 +3,31 @@
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
+import { Product, CartItem } from "../../../../../types"
+import { useCartContext } from "@/app/cartContext"
 
-export default function AddProduct() {
+
+
+export default function AddProduct( currProduct:any ) {
     const router = useRouter()
-
-    const [quantity, setQuantity] = useState(0)
-
+    var [newQuantity, setNewQuantity] = useState(1)
+    const {cart, setCart} = useCartContext()
+    console.log(cart)
+    
+    function addToCart(e: any) {
+      e.preventDefault();
+      if (cart.length > 0) {
+        let index = cart.map((e:any) => e.product).indexOf(currProduct)
+        if (index >= 0) {
+          setNewQuantity(newQuantity + cart[index].quantity)
+        }
+    }
+      var newCartItem = {product: {...currProduct}, quantity: newQuantity}
+      setCart([...cart, newCartItem])
+    }
+    
+    
+    
     async function handleSubmit(e:FormEvent) {
         e.preventDefault()
         const res = await axios.post(`${process.env.BASE_URL}/checkout`, {
@@ -33,7 +52,7 @@ export default function AddProduct() {
             <button
               name="add-cart-button"
               className=" cursor-pointer flex items-center rounded-md text-indigo-100 border-b-2 border-indigo-800 shadow-lg bg-indigo-600 hover:bg-indigo-700 hover:shadow-md active:bg-indigo-800 active:shadow-sm transition-all duration-100 ease-in-out p-4"
-                onClick={handleSubmit}
+                onClick={addToCart}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

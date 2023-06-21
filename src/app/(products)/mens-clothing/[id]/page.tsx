@@ -3,15 +3,13 @@ import { db } from "../../../../../firebase.config";
 import Image from "next/image";
 import AddProduct from "./addProduct";
 
+
 async function getProduct(productId: string) {
   const docRef = doc(db, "men", productId);
   const query = await getDoc(docRef);
   return query.data();
 }
 
-function submitProductForm(e: any) {
-  e.preventDefault();
-}
 
 export default async function ProductPage({ params }: any) {
   const product = (await getProduct(params.id)) || {};
@@ -46,7 +44,7 @@ export default async function ProductPage({ params }: any) {
         <div>
           <h1 className="text-xl font-semibold">{product.title}</h1>
           <h2 className="text-lg font-medium">${product.price}</h2>
-          <AddProduct></AddProduct>
+          <AddProduct currProduct={product}></AddProduct>
         </div>
       </div>
     </div>

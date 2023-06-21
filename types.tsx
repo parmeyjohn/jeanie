@@ -10,3 +10,8 @@ export interface Product {
     section: string,
     price: number
 }
+
+export interface CartItem {
+    product: Product,
+    quantity: number
+}
