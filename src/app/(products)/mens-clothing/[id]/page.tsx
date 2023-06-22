@@ -1,9 +1,9 @@
 
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../../../firebase.config";
-import Image from "next/image";
 import AddProduct from "./addProduct";
 import ImageCarousel from "./imageCarousel";
+import { Product } from "../../../../../types";
 
 
 async function getProduct(productId: string) {
@@ -20,10 +20,7 @@ export default async function ProductPage({ params }: any) {
     <div className="w-full h-full bg-gradient-to-t from-indigo-200 to-indigo-50 flex justify-center">
       <h2 className="ml-8">Men {product.category}</h2>
       <div className="w-full max-w-4xl flex justify-between p-8">
-       <ImageCarousel product={product} imageUrls={images}>
-
-       </ImageCarousel>
-       
+       <ImageCarousel product={product as Product} imageUrls={images}></ImageCarousel>
         <div>
           <h1 className="text-xl font-semibold">{product.title}</h1>
           <h2 className="text-lg font-medium my-1">${product.price}</h2>
