@@ -38,10 +38,28 @@ export default function AddProduct(currProduct: any) {
 
   return (
     <form>
-      <div className="flex flex-col my-4">
+      <div className="my-2">
+        <label className="text-sm">Sizes:</label>
+
+        <div className="flex flex-wrap">
+          {sizes.map((s: string, i: number) => (
+            <button
+              key={i}
+              onClick={(e) => {
+                e.preventDefault()
+                setCurrSize(s);
+              }}
+              className={` flex justify-center items-center w-10 h-10 mx-2 my-1 bg-white border border-indigo-300 hover:shadow-indigo-300 hover:border-indigo-400 p-2 rounded-md hover:bg-indigo-200 hover:shadow-lg active:bg-indigo-400 active:shadow-sm transition-all duration-100 ease-in-out ${currSize === s ? 'border-2 border-indigo-700 bg-indigo-300' : ''}`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-col my-2">
         <label className="text-sm" htmlFor="quantity">Quantity:</label>
         <input
-          className="w-fit p-2 m-2 rounded-lg outline-indigo-700 transition-all ease-in-out duration-100"
+          className="w-fit p-2 mx-2 my-1 rounded-lg outline-indigo-700 transition-all ease-in-out duration-100"
           name="quantity"
           value={newQuantity}
           type="number"
@@ -50,24 +68,10 @@ export default function AddProduct(currProduct: any) {
           onChange={(e) => setNewQuantity(Number(e.target.value))}
         ></input>
       </div>
-      <label className="text-sm">Sizes:</label>
-      <div className="flex flex-wrap">
-        {sizes.map((s: string, i: number) => (
-          <button
-            key={i}
-            onClick={(e) => {
-              e.preventDefault()
-              setCurrSize(s);
-            }}
-            className={` flex justify-center items-center w-10 h-10 m-2 bg-white border border-indigo-300 hover:shadow-indigo-300 hover:border-indigo-400 p-2 rounded-md hover:bg-indigo-200 hover:shadow-lg active:bg-indigo-400 active:shadow-sm transition-all duration-100 ease-in-out ${currSize === s ? 'border-2 border-indigo-700 bg-indigo-300' : ''}`}
-          >
-            {s}
-          </button>
-        ))}
-      </div>
+      
       <button
         name="add-cart-button"
-        className="my-4 cursor-pointer flex items-center rounded-md text-indigo-100 border-b-2 border-indigo-800 shadow-lg bg-indigo-600 hover:bg-indigo-700 hover:shadow-md active:bg-indigo-800 active:shadow-sm transition-all duration-100 ease-in-out p-4"
+        className="my-4 w-full cursor-pointer flex items-center justify-center rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-lg bg-indigo-600 hover:bg-indigo-700 hover:shadow-md active:bg-indigo-800 active:shadow-sm transition-all duration-100 ease-in-out p-4"
         onClick={addToCart}
       >
         <svg
@@ -84,7 +88,7 @@ export default function AddProduct(currProduct: any) {
             d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
           />
         </svg>
-        <label htmlFor="add-cart-button">Add to cart</label>
+        <label htmlFor="add-cart-button" className="cursor-pointer">Add to cart</label>
       </button>
     </form>
   );

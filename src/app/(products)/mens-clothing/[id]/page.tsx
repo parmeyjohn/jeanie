@@ -1,7 +1,9 @@
+
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../../../firebase.config";
 import Image from "next/image";
 import AddProduct from "./addProduct";
+import ImageCarousel from "./imageCarousel";
 
 
 async function getProduct(productId: string) {
@@ -13,37 +15,18 @@ async function getProduct(productId: string) {
 
 export default async function ProductPage({ params }: any) {
   const product = (await getProduct(params.id)) || {};
-
+  const images = [product.main_img, product.sec_img, ...product.alt_images ]
   return (
     <div className="w-full h-full bg-gradient-to-t from-indigo-200 to-indigo-50 flex justify-center">
+      <h2 className="ml-8">Men {product.category}</h2>
       <div className="w-full max-w-4xl flex justify-between p-8">
-        <div className="flex">
-          <div className="relative w-80 h-80">
-            {
-              <Image
-                className="rounded-t-xl w-10 h-10"
-                fill={true}
-                src={product.main_img}
-                alt={product.title}
-              ></Image>
-            }
-          </div>
-          <div className="flex flex-col justify-start">
-            {product.alt_images.map((img: string, i: any) => (
-              <div key={i} className="relative w-20 h-20">
-                <Image
-                  className=""
-                  fill={true}
-                  src={img}
-                  alt={`${product.title} alt image ${i + 1}`}
-                ></Image>
-              </div>
-            ))}
-          </div>
-        </div>
+       <ImageCarousel product={product} imageUrls={images}>
+
+       </ImageCarousel>
+       
         <div>
           <h1 className="text-xl font-semibold">{product.title}</h1>
-          <h2 className="text-lg font-medium">${product.price}</h2>
+          <h2 className="text-lg font-medium my-1">${product.price}</h2>
           <AddProduct currProduct={product}></AddProduct>
         </div>
       </div>

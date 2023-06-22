@@ -94,7 +94,7 @@ export default function RootLayout({
                   href="/mens-clothing"
                   className={`${
                     pathname.includes("/mens-clothing")
-                      ? "bg-indigo-300 border border-indigo-500"
+                      ? "bg-indigo-200 border border-indigo-500"
                       : ""
                   } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
                 >
@@ -104,7 +104,7 @@ export default function RootLayout({
                   href="/womens-clothing"
                   className={`${
                     pathname.includes("/womens-clothing")
-                      ? "bg-indigo-300 border border-indigo-500"
+                      ? "bg-indigo-200 border border-indigo-500"
                       : ""
                   } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
                 >
