@@ -1,56 +1,33 @@
 "use client";
-import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
-import { useRouter } from 'next/router'
-import { auth, storage } from "../../../firebase.config";
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Product } from "../../../types"
+import { Product } from "../../../types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function ProductCard({img_path, price, title, main_img, sec_img, id}: Product) {
+export default function ProductCard({
+  price,
+  title,
+  main_img,
+  sec_img,
+  id,
+}: Product) {
   const pathname = usePathname();
-  const [productImages, setProductImages] = useState(Array<string>);
-  const [imageHovered, setImageHovered] = useState(false)
-  useEffect(() => {
-    //console.log(typeof productObj)
-    getImages(img_path).then(() => console.log("hey"));
-    console.log(productImages)
-    //getImages().then((res) => setImgUrl(res))
-  }, []);
-
-  const getImages = async (path: string) => {
-    //TODO: plug in individual component file here
-    const storageRef = ref(storage, path);
-    const files = await listAll(storageRef);
-    const urlPromises = files.items.map((imageRef) => getDownloadURL(imageRef));
-    var images: string[] = [];
-    urlPromises.forEach(async (url) => {
-      let curr_url = await url;
-      images.push(curr_url);
-    });
-    console.log(images);
-    setProductImages(images);
-    console.log("urlPromises");
-    return urlPromises;
-  };
 
   return (
     <Link href={`${pathname}/${id}`}>
-        <div className="m-4 rounded-xl cursor-pointer">
-        <div onMouseLeave={() => setImageHovered(false)} onMouseEnter={() => setImageHovered(true)} className="relative w-60 h-72 transition-all ease-in-out bg-slate-200 rounded-xl flex flex-col justify-center ">  
-            {imageHovered ? 
-            <Image  className="rounded-t-xl" fill={true}  src={sec_img} alt='pants'></Image>
-
-            :
-            <Image  className="rounded-t-xl w-10 h-10" fill={true} src={main_img} alt='pants'></Image>
-
-            }
-            
+      <div className="m-4 rounded-xl border border-indigo-300 cursor-pointer bg-indigo-100">
+        <div className="relative w-60 h-72 transition-all ease-in-out rounded-xl flex flex-col justify-center ">
+          <div className="absolute z-10 opacity-0 rounded-t-xl w-full h-full bg-indigo-200 hover:opacity-20 transition-all ease-in-out duration-100"></div>
+          <Image
+            className="rounded-t-xl w-10 h-10 border-b border-b-indigo-300"
+            fill={true}
+            src={main_img}
+            alt="pants"
+          ></Image>
         </div>
-        <h3 className=" text-sm font-medium p-2 pb-0">{title}</h3>
-            <h4 className=" px-2 pb-2 ml-1 text-sm">${price}</h4>
-        </div>
+        <h3 className=" text-xs font-medium p-2 pb-0">{title}</h3>
+        <h4 className=" px-2 pb-2 ml-1 text-xs">${price}</h4>
+      </div>
     </Link>
   );
 }

@@ -21,7 +21,7 @@ export default function WomensClothing() {
     
 
     const getObjects = async () => {
-        const query = await getDocs(collection(db, "men"));
+        const query = await getDocs(collection(db, "women"));
         var productArray:Array<Product> = []
         query.forEach((doc) => productArray.push(doc.data() as Product))
         console.log(productArray)

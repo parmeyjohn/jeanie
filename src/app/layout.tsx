@@ -36,10 +36,10 @@ export default function RootLayout({
   return (
     <CartContextProvider>
       <html lang="en">
-        <body className={`w-screen h-screen overflow-scroll ${inter.className}`}>
+        <body className={`w-screen h-screen overflow-y-auto overflow-x-hidden ${inter.className}`}>
           {showSearch && (
             <div className=" bg-slate-600 mx-auto absolute z-10 w-full flex justify-center items-center">
-              <div className="p-2 m-2 max-w-4xl w-screen flex items-center relative">
+              <div className="p-2 m-2 max-w-4xl w-full flex items-center relative">
                 <input
                   className="w-3xl p-2 w-[80%] rounded-lg"
                   placeholder="Search our products"
@@ -168,7 +168,7 @@ export default function RootLayout({
               </div>
             </nav>
           
-          <div className="h-full w-full">{children}</div>
+          <div className="h-auto w-full">{children}</div>
           <footer className="w-full h-10 bg-indigo-600"></footer>
         </body>
       </html>
