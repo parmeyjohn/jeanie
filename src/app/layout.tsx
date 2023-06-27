@@ -168,7 +168,7 @@ export default function RootLayout({
               </div>
             </nav>
           
-          <div className="h-auto w-full">{children}</div>
+          <div className="h-auto w-full bg-gradient-to-t from-indigo-100 to-indigo-50">{children}</div>
           <footer className="w-full h-10 bg-indigo-600"></footer>
         </body>
       </html>
