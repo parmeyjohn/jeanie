@@ -4,9 +4,10 @@ import Image from "next/image";
 
 export default function EmailSignUp() {
   const [showWindow, setShowWindow] = useState(true);
+  const [signedUp, setSignedUp] = useState(false);
   if (showWindow) {
     return (
-      <div className="flex border p-4 h-44 shadow-lg shadow-indigo-300 border-indigo-500 bg-gradient-to-tr from-indigo-400 to-indigo-200 rounded-xl max-w-4xl relative">
+      <div className="flex border p-4 h-44 shadow-lg shadow-indigo-300 border-indigo-500 bg-gradient-to-tr from-indigo-300 to-indigo-200 rounded-xl max-w-4xl relative">
         <div
           onClick={() => setShowWindow(false)}
           className="absolute right-0 top-0 m-4 p-2 hover:bg-indigo-300 rounded-full transition-all ease-linear duration-100 cursor-pointer "
@@ -44,15 +45,16 @@ export default function EmailSignUp() {
         </div>
         <div>
           <h2 className="text-lg font-semibold">
-            Sign up with your email and get 15% off
+            {signedUp ? 'Email sign up successful!' : 'Sign up with your email and get 15% off'}
           </h2>
           <p className="mb-2">
-            Receive emails and get first dibs on new arrivals, sales, exclusive
-            content, events and more!
+            {signedUp ? 'Thank you for signing up. A verification email will be sent within 24 hours.' : 'Receive emails and get first dibs on new arrivals, sales, exclusive content, events and more!'}
           </p>
+          {signedUp ? <></> :
+          
           <div className="">
             <label htmlFor="emailSignup" className="text-sm font-semibold">
-              Email:{" "}
+              Email:
             </label>
             <br></br>
             <div className="flex ml-2 justify-start items-center">
@@ -61,11 +63,11 @@ export default function EmailSignUp() {
                 id="emailSignup"
                 className="w-[75%] p-2 my-1 rounded-lg outline-indigo-700 transition-all ease-in-out duration-100 max-w-sm"
               ></input>
-              <button className="h-fit w-[25%] cursor-pointer ml-4 max-w-[8rem] flex items-center justify-center rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-lg bg-indigo-600 hover:bg-indigo-700 hover:shadow-md active:bg-indigo-800 active:shadow-sm transition-all duration-100 ease-in-out p-2">
+              <button onClick={() => setSignedUp(true)} className="h-fit w-[25%] cursor-pointer ml-4 max-w-[8rem] flex items-center justify-center rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-lg bg-indigo-600 hover:bg-indigo-700 hover:shadow-md active:bg-indigo-800 active:shadow-sm transition-all duration-100 ease-in-out p-2">
                 Sign Up
               </button>
             </div>
-          </div>
+          </div>}
         </div>
       </div>
     );

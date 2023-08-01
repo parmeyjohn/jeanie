@@ -4,7 +4,7 @@ import { auth, storage, db } from '../../../../firebase.config'
 import { doc, getDocs, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import ProductCard from "./../productCard";
+import ProductCard from "../../productCard";
 import { Product } from "../../../../types"
 import Link from "next/link";
 
