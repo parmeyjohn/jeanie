@@ -17,7 +17,7 @@ export default function ImageCarousel({
 
   return (
     <div className="flex">
-      <div className="relative w-80 h-80">
+      <div className="relative w-80 h-96">
         <Image
           className="rounded-xl w-10 h-10 border border-indigo-500 transition-all"
           fill={true}

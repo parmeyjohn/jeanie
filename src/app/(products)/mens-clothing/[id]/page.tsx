@@ -5,6 +5,7 @@ import AddProduct from "./addProduct";
 import ImageCarousel from "./imageCarousel";
 import EmailSignUp from "@/app/emailSignUp";
 import { Product } from "../../../../../types";
+import ProductCarousel from "@/app/productCarousel";
 
 
 async function getProduct(productId: string) {
@@ -18,7 +19,7 @@ export default async function ProductPage({ params }: any) {
   const product = (await getProduct(params.id)) || {};
   const images = [product.main_img, product.sec_img, ...product.alt_images];
   return (
-    <div className="w-full h-screen overflow-hidden bg-gradient-to-t from-indigo-200 to-indigo-50">
+    <div className="w-full h-screen overflow-y-auto bg-gradient-to-t from-indigo-200 to-indigo-50">
       <div className="max-w-4xl mx-auto">
         <h2 className=" p-4">Men {product.category}</h2>
         <div className="flex justify-between">
@@ -36,6 +37,7 @@ export default async function ProductPage({ params }: any) {
         </div>
         </div>
         <EmailSignUp></EmailSignUp>
+        <ProductCarousel title='Recently Viewed'></ProductCarousel>
       </div>
     </div>
   );
