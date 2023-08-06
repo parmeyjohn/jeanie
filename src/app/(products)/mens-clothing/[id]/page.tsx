@@ -16,7 +16,7 @@ export default async function ProductPage({ params }: any) {
   const product = (await getProduct(params.id)) || {};
   const images = [product.main_img, product.sec_img, ...product.alt_images];
   return (
-    <div className="w-full h-screen overflow-y-auto bg-gradient-to-t from-indigo-200 to-indigo-50">
+    <div className="w-full h-auto">
       <div className="max-w-4xl mx-auto">
         <h2 className=" p-4">Men {product.category}</h2>
         <div className="flex justify-between mb-8">
@@ -79,7 +79,7 @@ export default async function ProductPage({ params }: any) {
               </div>
 
               <div className="text-sm border-t border-t-indigo-400 pt-6">
-                <h3 className="font-semibold">Item info:</h3>
+                <h3 className="font-semibold mb-2">Item info:</h3>
                 <ul className="list-disc ml-6">
                   <li className="mb-1">75% Cotton</li>
                   <li className="mb-1">25% Polyester</li>
