@@ -169,7 +169,19 @@ export default function RootLayout({
             </nav>
           
           <div className="h-auto w-full bg-gradient-to-t from-indigo-100 to-indigo-50">{children}</div>
-          <footer className="w-full h-10 bg-indigo-600"></footer>
+          <footer className="w-full h-10 bg-indigo-600 flex justify-between">
+            <div>
+              Copyright 2023
+            </div>
+            
+            <div className="flex justify-around w-80">
+                  <a className="mx-4">Contact Us</a>
+                  <a className="mx-4">Contact Us</a>
+                  <a className="mx-4">Contact Us</a>
+                  <a className="mx-4">Contact Us</a>
+                  <a className="mx-4">Contact Us</a>
+            </div>
+          </footer>
         </body>
       </html>
     </CartContextProvider>
