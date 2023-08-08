@@ -12,6 +12,7 @@ export default function MensClothing() {
   const [imgUrl, setImgUrl] = useState("");
   const [sorting, setSorting] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
+  const [productsLength, setProductsLength] = useState<number>();
   const [categories, setCategories] = useState<string[]>([]);
   const [currCategories, setCurrCategories] = useState<Set<string>>(new Set());
   
@@ -27,12 +28,14 @@ export default function MensClothing() {
     var productArray: Array<Product> = [];
     query.forEach((doc) => productArray.push(doc.data() as Product));
     console.log(productArray);
+    setProductsLength(productArray.length)
     setProducts(productArray.sort((a,b) => a.id - b.id));
     var m = new Set(productArray.map((p) => p.category));
     setCategories(Array.from(m.values()));
     console.log("categories", m);
   };
 
+  
 
   const getImages = async () => {
     //TODO: plug in individual component file here
@@ -58,16 +61,16 @@ export default function MensClothing() {
     }
   }
 
-  function handleCheck(checkbox:any, c:string) {
+  function handleCheck(e:any, c:string) {
     const newCategories = new Set(currCategories)
-    if (checkbox.checked) {
-      console.log('hey')
+    if (e.target.checked) {
       newCategories.add(c)
     } else {
-      const newCategories = new Set(currCategories)
       newCategories.delete(c)
     }
+    console.log(newCategories)
     setCurrCategories(newCategories)
+    setProductsLength(products.filter(p => currCategories.size > 0 ? currCategories.has(p.category): p).length)
   }
 
   
@@ -76,13 +79,13 @@ export default function MensClothing() {
       <div className="flex justify-between items-center ml-4">
         <div className="">
           <h1 className="text-lg font-medium mt-4">Men's Clothing:</h1>
-          <h2 className="ml-2 text-slate-500">{products.length} products</h2>
+          <h2 className="ml-2 text-slate-500">{productsLength} products</h2>
         </div>
         
         <div>
           <label htmlFor="sort-options">Sort:</label>
           <br></br>
-          <select className="p-2 text-sm rounded-md outline-indigo-400" value={sorting} onChange={(e) => sortProducts(e)} name='sort-options'>
+          <select className="p-2 text-sm rounded-md outline-indigo-400 bg-transparent border border-indigo-400" value={sorting} onChange={(e) => sortProducts(e)} name='sort-options'>
             <option value='featured'>
               Featured
             </option>
@@ -96,13 +99,13 @@ export default function MensClothing() {
         </div>
       </div>
       
-      <div className=" bg-indigo-400 rounded-md h-80 p-2 -ml-24 absolute">
+      <div className=" border border-indigo-400 rounded-md h-80 w-36 p-4 -ml-40 absolute">
         <h3 className="text-md font-medium">Browse:</h3>
         <div className="ml-2 flex-col">
           {categories &&
             categories.map((c, i) => (
-              <div key={i}>
-                <input onChange={(e) => {handleCheck(e, c)}} type="checkbox"></input>
+              <div className="flex items-center justify-start" key={i}>
+                <input className="m-2 ml-0 h-6 w-6 border border-indigo-500 cursor-pointer appearance-none rounded-md bg-slate-300  transition duration-300 ease-in-out checked:bg-indigo-400 focus:ring-2 focus:ring-indigo-600" onChange={(e) => {handleCheck(e, c)}} type="checkbox"></input>
                 <label>{c}</label>
               </div>
             ))}
