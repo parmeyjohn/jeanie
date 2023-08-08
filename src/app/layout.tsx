@@ -38,7 +38,7 @@ export default function RootLayout({
     <CartContextProvider>
       <html lang="en">
         <body
-          className={`w-screen h-screen overflow-x-hidden ${inter.className}`}
+          className={`w-screen h-auto bg-gradient-to-tl from-indigo-200 to-indigo-100 overflow-y-auto overflow-x-hidden ${inter.className}`}
         >
           {showSearch && (
             <div className=" bg-slate-600 mx-auto absolute z-10 w-full flex justify-center items-center">
@@ -83,7 +83,8 @@ export default function RootLayout({
               </button>
             </div>
           )}
-          <nav className="flex justify-between items-center h-16 mx-auto text-black bg-slate-100 max-w-4xl border border-indigo-400">
+          
+          <nav className="flex justify-between items-center h-16 mx-auto text-black bg-slate-100 max-w-4xl rounded-b-xl border border-indigo-400 sticky top-0 z-50 border-t-0">
             <div className="flex justify-start">
               <Link
                 href=""
@@ -170,8 +171,12 @@ export default function RootLayout({
               )}
             </div>
           </nav>
-
-          <div className="h-auto w-full bg-gradient-to-tl from-indigo-200 to-indigo-100 overflow-y-auto">
+          <div className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-100 ease-linear flex justify-center items-end h-16 rounded-xl w-[56rem] mx-auto -translate-y-5 -z-10">
+              <p className="p-3 text-indigo-50 font-semibold">
+              20% off all denim styles
+              </p>
+          </div>
+          <div className="h-auto w-full  overflow-y-auto">
             {children}
           </div>
           <footer className="w-full text-sm  transition-all ease-linear duration-100 h-16 bg-indigo-600 text-indigo-100 flex justify-around items-center">

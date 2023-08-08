@@ -11,13 +11,16 @@ import Link from "next/link";
 export default function MensClothing() {
   const [imgUrl, setImgUrl] = useState("");
   const [sorting, setSorting] = useState("");
-  const [products, setProducts] = useState(Array<Product>);
-  const [categories, setCategories] = useState(Array<String>);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [currCategories, setCurrCategories] = useState<Set<string>>(new Set());
+  
   useEffect(() => {
     //getImages().then((res) => setImgUrl(res))
     //console.log(productsRef)
     getObjects();
   }, []);
+
 
   const getObjects = async () => {
     const query = await getDocs(collection(db, "men"));
@@ -30,6 +33,7 @@ export default function MensClothing() {
     console.log("categories", m);
   };
 
+
   const getImages = async () => {
     //TODO: plug in individual component file here
     const storageRef = ref(storage, "pants/men_pants");
@@ -40,6 +44,8 @@ export default function MensClothing() {
     console.log("urlPromises");
     return urlPromises;
   };
+
+
   function sortProducts(e:any) {
     setSorting(e.target.text)
     if (e.target.value === "low-high") {
@@ -51,6 +57,20 @@ export default function MensClothing() {
       setProducts([...products.sort((a,b) => a.id - b.id)])
     }
   }
+
+  function handleCheck(checkbox:any, c:string) {
+    const newCategories = new Set(currCategories)
+    if (checkbox.checked) {
+      console.log('hey')
+      newCategories.add(c)
+    } else {
+      const newCategories = new Set(currCategories)
+      newCategories.delete(c)
+    }
+    setCurrCategories(newCategories)
+  }
+
+  
   return (
     <div className="w-full max-w-4xl mx-auto h-full">
       <div className="flex justify-between items-center ml-4">
@@ -76,21 +96,21 @@ export default function MensClothing() {
         </div>
       </div>
       
-      <div className="absolute left-0 bg-slate-400 rounded-md h-80 p-2">
+      <div className=" bg-indigo-400 rounded-md h-80 p-2 -ml-24 absolute">
         <h3 className="text-md font-medium">Browse:</h3>
         <div className="ml-2 flex-col">
           {categories &&
             categories.map((c, i) => (
               <div key={i}>
-                <input type="checkbox"></input>
+                <input onChange={(e) => {handleCheck(e, c)}} type="checkbox"></input>
                 <label>{c}</label>
               </div>
             ))}
         </div>
       </div>
-      <div className="flex max-w-4xl mx-auto flex-wrap">
+      <div className="flex max-w-4xl mx-auto flex-wrap ">
         {products &&
-          products.map((p) => (
+          products.filter(p => currCategories.size > 0 ? currCategories.has(p.category): p).map((p) => (
             <div key={p.id}>
               <ProductCard {...p}></ProductCard>
             </div>
