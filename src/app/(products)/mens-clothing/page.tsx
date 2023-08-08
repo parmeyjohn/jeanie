@@ -22,6 +22,10 @@ export default function MensClothing() {
     getObjects();
   }, []);
 
+  useEffect(() => {
+    setProductsLength(products.filter(p => currCategories.size > 0 ? currCategories.has(p.category): p).length)
+  }, [currCategories])
+
 
   const getObjects = async () => {
     const query = await getDocs(collection(db, "men"));
@@ -70,7 +74,6 @@ export default function MensClothing() {
     }
     console.log(newCategories)
     setCurrCategories(newCategories)
-    setProductsLength(products.filter(p => currCategories.size > 0 ? currCategories.has(p.category): p).length)
   }
 
   
