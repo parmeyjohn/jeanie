@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import firebase from "firebase/compat/app";
 import * as firebaseui from "firebaseui";
@@ -15,7 +15,6 @@ import { auth } from "../../firebase.config";
 import { CartItem, Product } from "../../types";
 import { CartContextProvider } from "./cartContext";
 const inter = Inter({ subsets: ["latin"] });
-
 
 export const metadata = {
   title: "Create Next App",
@@ -29,10 +28,13 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
   const [user, loading, error] = useAuthState(auth);
-  console.log(user);
   const [showSearch, setShowSearch] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [cart, setCart] = useState(Array<CartItem>)
+  const [cart, setCart] = useState(Array<CartItem>);
+
+  useEffect(() => {
+    console.log(user)
+  }, [])
 
   return (
     <CartContextProvider>
@@ -63,7 +65,7 @@ export default function RootLayout({
                 </svg>
               </div>
               <button
-                className="font-medium p-2 m-2 text-md transition-all  ease-in-out duration-100 cursor-pointer hover:bg-slate-300 hover:rounded-md hover:font-semibold"
+                className="font-medium p-2 m-2 text-md transition-all  ease-in-out duration-100 cursor-pointer hover:bg-slate-300 flex justify-center items-center hover:rounded-md hover:font-semibold"
                 onClick={() => setShowSearch(false)}
               >
                 <svg
@@ -83,8 +85,11 @@ export default function RootLayout({
               </button>
             </div>
           )}
-          
+
           <nav className="flex justify-between items-center h-16 mx-auto text-black bg-slate-100 max-w-4xl rounded-b-xl border border-indigo-400 sticky top-0 z-50 border-t-0">
+            <div className="absolute top-5 left-[50%] z-50">
+              <h1 className="text-xl font-extrabold text-indigo-500 tracking-tighter hover:text-indigo-600">jeanie</h1>
+            </div>
             <div className="flex justify-start">
               <Link
                 href=""
@@ -141,9 +146,9 @@ export default function RootLayout({
                 href="/cart"
                 className={`${
                   pathname.includes("/cart")
-                    ? "bg-indigo-300 border border-indigo-500"
+                    ? "bg-indigo-200 border border-indigo-500"
                     : ""
-                } flex font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
+                } flex font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md justify-center items-center shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +156,7 @@ export default function RootLayout({
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6 mr-2"
+                  className="w-6 h-6"
                 >
                   <path
                     strokeLinecap="round"
@@ -161,10 +166,10 @@ export default function RootLayout({
                 </svg>
                 {cart.length > 0 ? cart.length : ""}
               </Link>
-              {pathname !== "/login" && user === undefined && (
+              {pathname !== "/login" && user === null && (
                 <Link
                   href="/login"
-                  className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex"
+                  className="absolute -right-24 top-0  z-[60] font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex"
                 >
                   Sign in
                 </Link>
@@ -172,21 +177,24 @@ export default function RootLayout({
             </div>
           </nav>
           <div className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-100 ease-linear flex justify-center items-end h-16 rounded-xl w-[56rem] mx-auto -translate-y-5 -z-10">
-              <p className="p-[0.6rem] text-indigo-50 font-semibold">
-              20% off all denim styles
-              </p>
+            <p className="p-[0.6rem] text-indigo-50 font-semibold">
+              20% off all denim styles using code 'NEWDENIM'
+            </p>
           </div>
-          <div className="h-auto w-full  overflow-y-auto">
-            {children}
-          </div>
+          <div className="h-auto w-full  overflow-y-auto">{children}</div>
           <footer className="w-full text-sm  transition-all ease-linear duration-100 h-16 bg-indigo-600 text-indigo-100 flex justify-around items-center">
-            
             <div className="p-2">Copyright 2023</div>
 
             <div className="flex justify-between items-center w-fit p-2">
-              <a className="mx-4 hover:underline" href='#'>Contact Us</a>
-              <a className="mx-4 hover:underline" href='#'>FAQ</a>
-              <a className="mx-4 hover:underline" href='#'>Returns</a>
+              <a className="mx-4 hover:underline" href="#">
+                Contact Us
+              </a>
+              <a className="mx-4 hover:underline" href="#">
+                FAQ
+              </a>
+              <a className="mx-4 hover:underline" href="#">
+                Returns
+              </a>
               <div className="flex">
                 <a
                   href="https://www.twitter.com"
@@ -194,8 +202,11 @@ export default function RootLayout({
                 >
                   <FaTwitter size="1.5rem" />
                 </a>
-                <a href="https://www.instagram.com" className="point-on front px-2">
-                  <FaInstagram  size="1.5rem" />
+                <a
+                  href="https://www.instagram.com"
+                  className="point-on front px-2"
+                >
+                  <FaInstagram size="1.5rem" />
                 </a>
                 <a
                   href="https://www.facebook.com"

@@ -3,17 +3,23 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react"
 import Link from "next/link";
-import { auth } from "../../../firebase.config"
+import { auth, db } from "../../../firebase.config"
+import { doc, setDoc, addDoc, getDocs, collection } from "firebase/firestore"; 
+import { useUserStore } from "../userGeneration";
 
 export default function SignUp() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const { setUserId } = useUserStore()
     
     const signUp = async (e:React.FormEvent<HTMLFormElement>) : Promise<void> => {
         e.preventDefault()
         try {
-            var user = await createUserWithEmailAndPassword(auth, email, password)
-            console.log(user)
+            var cred = await createUserWithEmailAndPassword(auth, email, password)
+            await setDoc(doc(db, "users", cred.user.uid), {
+                recently_viewed: []
+              });
+            setUserId(cred.user.uid)
         } catch (error) {
             console.log(error)
         }

@@ -1,10 +1,12 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "../../../../../firebase.config";
+import { arrayUnion, collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { db, auth } from "../../../../../firebase.config";
 import AddProduct from "./addProduct";
 import ImageCarousel from "./imageCarousel";
 import EmailSignUp from "@/app/emailSignUp";
 import { Product } from "../../../../../types";
 import ProductCarousel from "@/app/productCarousel";
+import { useUserStore } from "@/app/userGeneration";
+import RecentlyViewedCarousel from "@/app/recentlyViewedCarousel";
 
 async function getProduct(productId: string) {
   const docRef = doc(db, "men", productId);
@@ -12,8 +14,12 @@ async function getProduct(productId: string) {
   return query.data();
 }
 
+
 export default async function ProductPage({ params }: any) {
-  const product = (await getProduct(params.id)) || {};
+  const product = (await getProduct(params.id)) || {}; 
+    
+  
+  
   const images = [product.main_img, product.sec_img, ...product.alt_images];
   return (
     <div className="w-full h-auto">
@@ -90,9 +96,11 @@ export default async function ProductPage({ params }: any) {
             </div>
           </div>
         </div>
-        <ProductCarousel title="Others Also Viewed"></ProductCarousel>
+        <h2 className="font-semibold">Others Also Viewed:</h2>
+        <ProductCarousel></ProductCarousel>
         <EmailSignUp></EmailSignUp>
-        <ProductCarousel title="Recently Viewed"></ProductCarousel>
+        <h2 className="font-semibold">Recently Viewed:</h2>
+        <RecentlyViewedCarousel currProduct={product as Product}></RecentlyViewedCarousel>
       </div>
     </div>
   );

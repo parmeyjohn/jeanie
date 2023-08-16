@@ -15,3 +15,7 @@ export interface CartItem {
     product: Product,
     quantity: number
 }
+
+export interface UserObj {
+    user_id: string
+}

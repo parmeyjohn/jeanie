@@ -1,21 +1,47 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import ProductCard from "./productCard";
+import { collection, doc, getDoc } from "firebase/firestore";
+import { db, auth } from "../../firebase.config";
+import { useUserStore } from "./userGeneration";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { Product } from "../../types";
 
 interface Props {
-  title: string;
+  products: Product[];
 }
 
-export default function ProductCarousel({ title }: Props) {
+export default async function ProductCarousel({ products }: Props) {
   // fetch recently viewed products from user on firebase
+  const [rightIndexBound, setRightIndexBound] = useState<number>(7);
+  const [leftIndexBound, setLeftIndexBound] = useState<number>(0);
   const [scrollIndex, setScrollIndex] = useState<number>(0);
+
   // width of the carousel on current screen
   const width = 3;
   const ref = useRef<null | HTMLDivElement[]>([]);
+  const containerRef = useRef<HTMLDivElement>();
+
+  // useEffect(() => {
+
+  //   const getRecentlyViewed = async (uid:string) => {
+  //     const userSnapshot = await getDoc(doc(db, 'users', uid));
+  //     if (userSnapshot) {
+  //       const userDoc = userSnapshot.data()
+  //       console.log(userDoc)
+  //     }
+  //   }
+  //   if (auth?.currentUser) {
+  //     console.log('uid', auth?.currentUser.uid)
+  //     getRecentlyViewed(auth.currentUser.uid)
+  //   }
+  // }, [auth?.currentUser])
+
   useEffect(() => {
     console.log(scrollIndex);
   }, [scrollIndex]);
-  const products = [
+
+  const productss = [
     {
       price: 39.99,
       category: "pants",
@@ -157,6 +183,9 @@ export default function ProductCarousel({ title }: Props) {
   ];
 
   const handleButtonForward = () => {
+    //setLeftIndexBound(leftIndexBound + width)
+    //setRightIndexBound(rightIndexBound + width)
+    containerRef.current.scrollLeft += containerRef.current.clientWidth;
     setScrollIndex(() => scrollIndex + width);
     ref.current[scrollIndex + width].scrollIntoView({
       behavior: "smooth",
@@ -166,81 +195,91 @@ export default function ProductCarousel({ title }: Props) {
   };
 
   const handleButtonBack = () => {
+    //setLeftIndexBound(leftIndexBound - width)
+    //setRightIndexBound(rightIndexBound - width)
     setScrollIndex(() => scrollIndex - width);
+    containerRef.current.scrollLeft -= containerRef.current.clientWidth;
     ref.current[scrollIndex - width].scrollIntoView({
       behavior: "smooth",
       block: "nearest",
       inline: "start",
     });
   };
-
-  return (
-    <div className="w-full p-4 mb-8">
-      <h2 className="font-semibold">{title}:</h2>
-      <div className="relative flex w-full h-fit justify-center items-center">
-        <button
-          onClick={handleButtonBack}
-          className={
-            scrollIndex - width >= 0
-              ? "absolute -left-16 top-50 z-20 text-indigo-800 border border-indigo-600 hover:bg-indigo-400 transition-all ease-linear duration-100 p-2 cursor-pointer mx-2 bg-indigo-300 border-b-2 border-b-indigo-800 rounded-full"
-              : "absolute -left-16 top-50 z-20 border border-slate-600 transition-all ease-linear duration-100 p-2 pointer-events-none mx-2 bg-slate-400 border-b-slate-800 rounded-full"
-          }
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
+  if (products) {
+    return (
+      <div className="w-full px-4 mb-8">
+        <div className="relative flex w-full h-fit justify-center items-center">
+          <button
+            onClick={handleButtonBack}
+            className={
+              scrollIndex - width >= 0
+                ? "absolute -left-16 top-50 z-20 text-indigo-800 border border-indigo-600 hover:bg-indigo-400 transition-all ease-linear duration-100 p-2 cursor-pointer mx-2 bg-indigo-300 border-b-2 border-b-indigo-800 rounded-full"
+                : "absolute -left-16 top-50 z-20 border border-slate-600 transition-all ease-linear duration-100 p-2 pointer-events-none mx-2 bg-slate-400 border-b-slate-800 rounded-full"
+            }
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 19.5L8.25 12l7.5-7.5"
-            />
-          </svg>
-        </button>
-        <div className="no-scrollbar overflow-x-auto flex justify-start">
-          {products?.map((p, index) => {
-            return (
-              <div
-                ref={(element) => {
-                  if (ref.current) {
-                    ref.current[index] = element;
-                  }
-                }}
-                key={p.id}
-              >
-                <ProductCard {...p}></ProductCard>
-              </div>
-            );
-          })}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5L8.25 12l7.5-7.5"
+              />
+            </svg>
+          </button>
+          <div
+            ref={containerRef}
+            className="no-scrollbar overflow-x-auto flex justify-start"
+          >
+            {productss
+              ?.slice(leftIndexBound, rightIndexBound)
+              .map((p, index) => {
+                return (
+                  <div
+                    ref={(element) => {
+                      if (ref.current) {
+                        ref.current[index] = element;
+                      }
+                    }}
+                    key={p.id}
+                  >
+                    <ProductCard {...p}></ProductCard>
+                  </div>
+                );
+              })}
+          </div>
+          <button
+            onClick={handleButtonForward}
+            className={
+              scrollIndex + width < products.length
+                ? "absolute -right-16 top-50 z-20 text-indigo-800 border border-indigo-600 hover:bg-indigo-400 transition-all ease-linear duration-100 p-2 cursor-pointer mx-2 bg-indigo-300 border-b-2 border-b-indigo-800 rounded-full"
+                : "absolute -right-16 top-50 z-20 border border-slate-600 transition-all ease-linear duration-100 p-2 pointer-events-none mx-2 bg-slate-400 border-b-slate-800 rounded-full"
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.25 4.5l7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </button>
         </div>
-        <button
-          onClick={handleButtonForward}
-          className={
-            scrollIndex + width < products.length
-              ? "absolute -right-16 top-50 z-20 text-indigo-800 border border-indigo-600 hover:bg-indigo-400 transition-all ease-linear duration-100 p-2 cursor-pointer mx-2 bg-indigo-300 border-b-2 border-b-indigo-800 rounded-full"
-              : "absolute -right-16 top-50 z-20 border border-slate-600 transition-all ease-linear duration-100 p-2 pointer-events-none mx-2 bg-slate-400 border-b-slate-800 rounded-full"
-          }
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8.25 4.5l7.5 7.5-7.5 7.5"
-            />
-          </svg>
-        </button>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (<div>No products</div>)
+  }
 }
