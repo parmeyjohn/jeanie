@@ -13,33 +13,9 @@ interface Props {
 
 export default async function ProductCarousel({ products }: Props) {
   // fetch recently viewed products from user on firebase
-  const [rightIndexBound, setRightIndexBound] = useState<number>(7);
-  const [leftIndexBound, setLeftIndexBound] = useState<number>(0);
   const [scrollIndex, setScrollIndex] = useState<number>(0);
 
-  // width of the carousel on current screen
-  const width = 3;
-  const ref = useRef<null | HTMLDivElement[]>([]);
-  const containerRef = useRef<HTMLDivElement>();
 
-  // useEffect(() => {
-
-  //   const getRecentlyViewed = async (uid:string) => {
-  //     const userSnapshot = await getDoc(doc(db, 'users', uid));
-  //     if (userSnapshot) {
-  //       const userDoc = userSnapshot.data()
-  //       console.log(userDoc)
-  //     }
-  //   }
-  //   if (auth?.currentUser) {
-  //     console.log('uid', auth?.currentUser.uid)
-  //     getRecentlyViewed(auth.currentUser.uid)
-  //   }
-  // }, [auth?.currentUser])
-
-  useEffect(() => {
-    console.log(scrollIndex);
-  }, [scrollIndex]);
 
   const productss = [
     {
@@ -182,6 +158,18 @@ export default async function ProductCarousel({ products }: Props) {
     },
   ];
 
+
+
+  // width of the carousel on current screen
+  const width = 3;
+  const ref = useRef<null | HTMLDivElement[]>([]);
+  const containerRef = useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    console.log(scrollIndex);
+  }, [scrollIndex]);
+
+
   const handleButtonForward = () => {
     //setLeftIndexBound(leftIndexBound + width)
     //setRightIndexBound(rightIndexBound + width)
@@ -205,7 +193,6 @@ export default async function ProductCarousel({ products }: Props) {
       inline: "start",
     });
   };
-  if (products) {
     return (
       <div className="w-full px-4 mb-8">
         <div className="relative flex w-full h-fit justify-center items-center">
@@ -237,8 +224,7 @@ export default async function ProductCarousel({ products }: Props) {
             className="no-scrollbar overflow-x-auto flex justify-start"
           >
             {productss
-              ?.slice(leftIndexBound, rightIndexBound)
-              .map((p, index) => {
+              ?.map((p, index) => {
                 return (
                   <div
                     ref={(element) => {
@@ -256,7 +242,7 @@ export default async function ProductCarousel({ products }: Props) {
           <button
             onClick={handleButtonForward}
             className={
-              scrollIndex + width < products.length
+              scrollIndex + width < products?.length
                 ? "absolute -right-16 top-50 z-20 text-indigo-800 border border-indigo-600 hover:bg-indigo-400 transition-all ease-linear duration-100 p-2 cursor-pointer mx-2 bg-indigo-300 border-b-2 border-b-indigo-800 rounded-full"
                 : "absolute -right-16 top-50 z-20 border border-slate-600 transition-all ease-linear duration-100 p-2 pointer-events-none mx-2 bg-slate-400 border-b-slate-800 rounded-full"
             }
@@ -279,7 +265,5 @@ export default async function ProductCarousel({ products }: Props) {
         </div>
       </div>
     );
-  } else {
-    return (<div>No products</div>)
-  }
+  
 }

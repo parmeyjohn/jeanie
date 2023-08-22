@@ -7,6 +7,7 @@ import { Product } from "../../../../../types";
 import ProductCarousel from "@/app/productCarousel";
 import { useUserStore } from "@/app/userGeneration";
 import RecentlyViewedCarousel from "@/app/recentlyViewedCarousel";
+import RecentlyViewed from "@/app/recentlyViewed";
 
 async function getProduct(productId: string) {
   const docRef = doc(db, "men", productId);
