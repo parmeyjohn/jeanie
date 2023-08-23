@@ -13,14 +13,14 @@ export default function MensClothing() {
   const [imgUrl, setImgUrl] = useState("");
   const [sorting, setSorting] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
-  const [productsLength, setProductsLength] = useState<number>();
+  const [productsLength, setProductsLength] = useState<number>(0);
   const [categories, setCategories] = useState<string[]>([]);
   const [currCategories, setCurrCategories] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     //getImages().then((res) => setImgUrl(res))
     //console.log(productsRef)
-    getObjects();
+    //getObjects();
   }, []);
 
   useEffect(() => {
@@ -81,7 +81,10 @@ export default function MensClothing() {
       <div className="flex justify-between items-center ml-4">
         <div className="">
           <h1 className="text-lg font-medium mt-4">Men's Clothing:</h1>
-          <h2 className="ml-2 text-slate-500">{productsLength} products</h2>
+          {productsLength > 0 ?
+            <h2 className="ml-2 text-slate-500">{productsLength} products</h2>
+            : <div className="ml-2 h-6 w-24 animate-pulse bg-indigo-400 rounded-md"></div>}
+
         </div>
 
         <div>
@@ -100,10 +103,10 @@ export default function MensClothing() {
         </div>
       </div>
 
-      <div className=" border text-sm border-indigo-400 rounded-md h-80 w-36 p-4 -ml-40 absolute">
+      <div className=" border text-sm border-indigo-400 rounded-md h-40 w-36 p-4 -ml-40 absolute">
         <h3 className="text-sm font-medium">Browse:</h3>
-        <div className="ml-2 flex-col">
-          {categories &&
+        <div className="flex-col h-auto">
+          {categories.length > 0 ?
             categories.map((c, i) => (
               <div className="flex items-center justify-start" key={i}>
                 <input
@@ -115,7 +118,11 @@ export default function MensClothing() {
                 ></input>
                 <label>{c}</label>
               </div>
-            ))}
+            )) : <>
+              <div className="h-6 w-24 animate-pulse bg-indigo-400 rounded-md m-2 ml-1 "></div>
+              <div className="h-6 w-24 animate-pulse bg-indigo-400 rounded-md m-2 ml-1 "></div>
+              <div className="h-6 w-24 animate-pulse bg-indigo-400 rounded-md m-2 ml-1 "></div>
+            </>}
         </div>
       </div>
       <div className="flex max-w-4xl justify-around mx-auto flex-wrap ">
@@ -128,17 +135,17 @@ export default function MensClothing() {
               <div key={p.id}>
                 <ProductCard {...p}></ProductCard>
               </div>
-            )): <>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                <LoadingProductCard></LoadingProductCard>
-                </>}
+            )) : <>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+          </>}
       </div>
     </div>
   );
