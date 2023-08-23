@@ -7,6 +7,7 @@ import Image from "next/image";
 import ProductCard from "../../productCard";
 import { Product } from "../../../../types";
 import Link from "next/link";
+import LoadingProductCard from "@/app/loadingProductCard";
 
 export default function MensClothing() {
   const [imgUrl, setImgUrl] = useState("");
@@ -117,8 +118,8 @@ export default function MensClothing() {
             ))}
         </div>
       </div>
-      <div className="flex max-w-4xl mx-auto flex-wrap ">
-        {products &&
+      <div className="flex max-w-4xl justify-around mx-auto flex-wrap ">
+        {products.length > 0 ?
           products
             .filter((p) =>
               currCategories.size > 0 ? currCategories.has(p.category) : p
@@ -127,7 +128,17 @@ export default function MensClothing() {
               <div key={p.id}>
                 <ProductCard {...p}></ProductCard>
               </div>
-            ))}
+            )): <>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                <LoadingProductCard></LoadingProductCard>
+                </>}
       </div>
     </div>
   );
