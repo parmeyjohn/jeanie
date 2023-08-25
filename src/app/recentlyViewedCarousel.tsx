@@ -276,9 +276,27 @@ useEffect(() => {
             <ProductCard {...p}></ProductCard>
           </div>)
           )
-            : <div>No products</div>)
-            : <div>Login to see products</div>}
-        </div>
+            : (<div className="flex-col w-full h-full justify-center items-center">
+                <h4>Get started by browsing a department</h4>
+                <div className="flex">
+                  <button>Men</button>
+                  <button>Women</button>
+                </div>
+                <h5>Recently viewed items will show up here</h5>
+              </div>))
+            : (<div className="w-full h-full ">
+                <div className="flex justify-center items-center">
+                  <h4>Login to see your recently viewed items!</h4>
+                  <div>
+                    <button>
+                      Login
+                    </button>
+                    <button>
+                      Signup
+                    </button>
+                  </div>
+                </div>
+            </div>)}
         <button
           onClick={handleButtonForward}
           className={
