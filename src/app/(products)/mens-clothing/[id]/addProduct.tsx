@@ -12,7 +12,6 @@ export default function AddProduct(currProduct: any) {
   const [sizes, setSizes] = useState(["S", "M", "L", "XL", "XXL"]);
   var [currSize, setCurrSize] = useState("S")
   const { cart, setCart } = useCartContext();
-  console.log(cart);
 
   function addToCart(e: any) {
     e.preventDefault();

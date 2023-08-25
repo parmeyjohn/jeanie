@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ProductCard from "./productCard";
 import {
   arrayUnion,
@@ -13,187 +13,163 @@ import { useUserStore } from "./userGeneration";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Product } from "../../types";
 import ProductCarousel from "./productCarousel";
-
-const updateRecentlyViewed = async (uid: string) => {
-
-}
+import { UserContext } from "./layout";
 
 
-const getRecentlyViewed = async (uid: string, currProduct: Product) => {
-  try {
-    const userSnapshot = await getDoc(doc(db, "users", uid));
-  if (userSnapshot) {
-    const userDoc = userSnapshot.data();
-    var recentlyViewed = [...userDoc.recently_viewed];
-    console.log("recent viewed", recentlyViewed);
-    if (currProduct && !recentlyViewed.find((p) => p.id === currProduct.id)) {
-      // if (recentlyViewed.length > 10) {
-      //   recentlyViewed.shift();
-      // }
-      recentlyViewed.push(currProduct);
-      console.log("its not here yet", recentlyViewed);
-      await updateDoc(doc(db, "users", uid), {
-        recently_viewed: recentlyViewed,
-      });
-    }
-    console.log("this is being run");
-    return recentlyViewed;
-  }
-  return [];} catch (e) {console.log('Error getting recently viewed:', e)}
-};
+
 
 
 
 const productss = [
-    {
-      price: 39.99,
-      category: "pants",
-      id: 1,
-      title: "Skinny Black Jeans 0",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
+  {
+    price: 39.99,
+    category: "pants",
+    id: 1,
+    title: "Skinny Black Jeans 0",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
 
-    {
-      price: 39.99,
-      category: "pants",
-      id: 2,
-      title: "Skinny Black Jeans 1",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
-    {
-      price: 39.99,
-      category: "pants",
-      id: 3,
-      title: "Skinny Black Jeans 2",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
-    {
-      price: 39.99,
-      category: "pants",
-      id: 4,
-      title: "Skinny Black Jeans 3",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
-    {
-      price: 39.99,
-      category: "pants",
-      id: 5,
-      title: "Skinny Black Jeans 4",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
-    {
-      price: 39.99,
-      category: "pants",
-      id: 6,
-      title: "Skinny Black Jeans 5",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
-    {
-      price: 39.99,
-      category: "pants",
-      id: 7,
-      title: "Skinny Black Jeans 6",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
+  {
+    price: 39.99,
+    category: "pants",
+    id: 2,
+    title: "Skinny Black Jeans 1",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
+  {
+    price: 39.99,
+    category: "pants",
+    id: 3,
+    title: "Skinny Black Jeans 2",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
+  {
+    price: 39.99,
+    category: "pants",
+    id: 4,
+    title: "Skinny Black Jeans 3",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
+  {
+    price: 39.99,
+    category: "pants",
+    id: 5,
+    title: "Skinny Black Jeans 4",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
+  {
+    price: 39.99,
+    category: "pants",
+    id: 6,
+    title: "Skinny Black Jeans 5",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
+  {
+    price: 39.99,
+    category: "pants",
+    id: 7,
+    title: "Skinny Black Jeans 6",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
 
-    {
-      price: 39.99,
-      category: "pants",
-      id: 8,
-      title: "Skinny Black Jeans 7",
-      section: "men",
-      sec_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
-      alt_images: [
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
-      ],
-      main_img:
-        "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
-      color: "black",
-      img_path: "",
-    },
-  ];
+  {
+    price: 39.99,
+    category: "pants",
+    id: 8,
+    title: "Skinny Black Jeans 7",
+    section: "men",
+    sec_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F11.jpg?alt=media&token=885b74f8-ea63-448b-a66c-97c86125b04e",
+    alt_images: [
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F7.jpg?alt=media&token=ab5c70f8-3e4f-476a-bf4b-df21652e1244",
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F12.jpg?alt=media&token=162e4d6f-a3d4-4443-b9e0-cdc5f7c0444a",
+    ],
+    main_img:
+      "https://firebasestorage.googleapis.com/v0/b/ecommerce-app-eb24a.appspot.com/o/men%2Fpants%2Fslim_black_jeans%2F10.jpg?alt=media&token=67d37592-6d61-4207-8556-13181449b2e2",
+    color: "black",
+    img_path: "",
+  },
+];
 
 
 interface Props {
   currProduct: Product | null;
 }
 
-export default async function RecentlyViewedCarousel({ currProduct }: Props) {
-  const [products, setProducts] = useState([...productss]);
-  const [user, loading, error] = useAuthState(auth);
-    const [recentlyViewed, setRecentlyViewed] = useState<Set<Product>>(new Set())
+export default function RecentlyViewedCarousel({ currProduct }: Props) {
+  const [products, setProducts] = useState([]);
+  //const [user, loading, error] = useAuthState(auth);
+  const { userObj, setUserObj } = useContext(UserContext);
 
   // fetch recently viewed products from user on firebase
   const [scrollIndex, setScrollIndex] = useState<number>(0);
@@ -203,61 +179,41 @@ export default async function RecentlyViewedCarousel({ currProduct }: Props) {
   const ref = useRef<null | HTMLDivElement[]>([]);
   const containerRef = useRef<HTMLDivElement>();
 
-  useEffect(() => {
-    console.log(scrollIndex);
-  }, [scrollIndex]);
 
   useEffect(() => {
-    console.log('products')
-  }, [products])
+    if (userObj) {}
+    const getRecentlyViewed = async (uid: string, currProduct: Product) => {
 
-  useEffect(() => {
-    if (loading) {
-        console.log('loading')
-    } else if (user) {
-        console.log('user loaded', user)
-        getRecentlyViewed(user.uid, currProduct).then(data => setRecentlyViewed(new Set(data)))
+        const userSnapshot = await getDoc(doc(db, "users", uid));
+        if (userSnapshot) {
+          const userDoc = userSnapshot.data();
+          var recentlyViewed = [...userDoc.recently_viewed];
+          console.log('recentlyViewed', recentlyViewed)
+          if (currProduct && !recentlyViewed.find((p) => p.id === currProduct.id)) {
+            if (recentlyViewed.length > 10) {
+              recentlyViewed.shift();
+            }
+            recentlyViewed.push(currProduct);
+            recentlyViewed.reverse()
+    
+          setProducts(recentlyViewed)
+          await updateDoc(doc(db, "users", uid), {
+            recently_viewed: recentlyViewed,
+          })}
+    }}
+      
+    
+    try {
+      getRecentlyViewed(userObj.uid, currProduct)
+    } catch (e) {
+      console.log('error', e)
     }
-  }, [user])
 
-  useEffect(() => {
-    console.log('new recent viewed', recentlyViewed)
+  }, [])
 
-  }, [recentlyViewed])
+useEffect(() => {
 
-//   useEffect(() => {
-//     const getRecentlyViewed = async (uid: string) => {
-//       const userSnapshot = await getDoc(doc(db, "users", uid));
-//       if (userSnapshot) {
-//         const userDoc = userSnapshot.data();
-//         var recentlyViewed = [...userDoc.recently_viewed];
-//         console.log('recent viewed', recentlyViewed);
-//         if (
-//           currProduct &&
-//           !recentlyViewed.find((p) => p.id === currProduct.id)
-//         ) {
-//           if (recentlyViewed.length > 10) {
-//             recentlyViewed.shift();
-//           }
-//           recentlyViewed.push(currProduct);
-//           console.log("its not here yet", recentlyViewed);
-//           await updateDoc(doc(db, "users", uid), {
-//             recently_viewed: recentlyViewed,
-//           });
-//         }
-//         console.log('this is being run')
-//         return recentlyViewed
-//       }
-//       return []
-//     };
-
-//     if (auth?.currentUser) {
-//       console.log("uid", auth?.currentUser.uid);
-//       getRecentlyViewed(auth.currentUser.uid).then(data => setProducts(data));
-//     }
-//   }, [auth.currentUser]);
-
-
+}, [products, setProducts])
 
   const handleButtonForward = () => {
     //setLeftIndexBound(leftIndexBound + width)
@@ -313,18 +269,15 @@ export default async function RecentlyViewedCarousel({ currProduct }: Props) {
           ref={containerRef}
           className="no-scrollbar overflow-x-auto flex justify-start"
         >
-          { productss.map((p, index) => 
-                (<div
-                    ref={(element) => {
-                    if (ref.current) {
-                        ref.current[index] = element;
-                    }
-                    }}
-                    key={p.id}
-                >
-                    <ProductCard {...p}></ProductCard>
-                </div>)
-            )}
+          {userObj ? (products.length > 0 ? products.map((p, index) =>
+          (<div
+            key={p.id}
+          >
+            <ProductCard {...p}></ProductCard>
+          </div>)
+          )
+            : <div>No products</div>)
+            : <div>Login to see products</div>}
         </div>
         <button
           onClick={handleButtonForward}

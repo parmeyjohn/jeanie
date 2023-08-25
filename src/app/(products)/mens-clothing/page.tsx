@@ -2,7 +2,7 @@
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import { auth, storage, db } from "../../../../firebase.config";
 import { doc, getDocs, collection } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import ProductCard from "../../productCard";
 import { Product } from "../../../../types";
@@ -17,11 +17,13 @@ export default function MensClothing() {
   const [categories, setCategories] = useState<string[]>([]);
   const [currCategories, setCurrCategories] = useState<Set<string>>(new Set());
 
+
   useEffect(() => {
     //getImages().then((res) => setImgUrl(res))
     //console.log(productsRef)
-    //getObjects();
+    getObjects();
   }, []);
+
 
   useEffect(() => {
     setProductsLength(

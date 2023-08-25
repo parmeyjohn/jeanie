@@ -9,16 +9,26 @@ import { useUserStore } from "@/app/userGeneration";
 import RecentlyViewedCarousel from "@/app/recentlyViewedCarousel";
 import RecentlyViewed from "@/app/recentlyViewed";
 
-async function getProduct(productId: string) {
-  const docRef = doc(db, "men", productId);
-  const query = await getDoc(docRef);
-  return query.data();
+
+const getProduct = async (productId: string) => {
+  const prodDocRef = doc(db, "men", productId);
+  const productSnapshot = await getDoc(prodDocRef);
+  return productSnapshot.data();
 }
 
 
+const getRecentlyViewed = async (uid: string, currProduct: Product) => {
+  const userDocRef = doc(db, "users", uid)
+  const userSnapshot = await getDoc(userDocRef);
+  var recentlyViewed = [...userSnapshot.data().recently_viewed]
+  //recentlyViewed.push(currProduct);
+  console.log(recentlyViewed)
+  return recentlyViewed
+}
+
 export default async function ProductPage({ params }: any) {
   const product = (await getProduct(params.id)) || {}; 
-    
+  //const recentlyViewed = (await getRecentlyViewed(userObj.uid, {}))
   
   
   const images = [product.main_img, product.sec_img, ...product.alt_images];

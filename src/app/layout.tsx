@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 
 import firebase from "firebase/compat/app";
 import * as firebaseui from "firebaseui";
@@ -13,7 +13,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "firebaseui/dist/firebaseui.css";
 import { auth } from "../../firebase.config";
 import { CartItem, Product } from "../../types";
+
 import { CartContextProvider } from "./cartContext";
+
+
+
+
+export const UserContext = createContext({})
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -31,13 +38,17 @@ export default function RootLayout({
   const [showSearch, setShowSearch] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [cart, setCart] = useState(Array<CartItem>);
+  const [userObj, setUserObj] = useState({})
 
   useEffect(() => {
-    console.log(user)
-  }, [])
+    console.log('user here', user)
+    console.log(typeof(user))
+    setUserObj(user)
+  }, [user])
 
   return (
-    <CartContextProvider>
+    <UserContext.Provider value= {{userObj, setUserObj}}>   
+      <CartContextProvider>
       <html lang="en">
         <body
           className={`w-screen h-auto bg-gradient-to-tl from-indigo-200 to-indigo-100 overflow-y-auto overflow-x-hidden ${inter.className}`}
@@ -220,5 +231,7 @@ export default function RootLayout({
         </body>
       </html>
     </CartContextProvider>
+    </UserContext.Provider>
+ 
   );
 }
