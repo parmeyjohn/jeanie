@@ -23,7 +23,7 @@ export default function AddProduct(currProduct: any) {
       }
     }
     console.log(currProduct)
-    var newCartItem = { currProduct, quantity: newQuantity, size: currSize };
+    var newCartItem = { ...currProduct, quantity: newQuantity, size: currSize };
     setCart([...cart, newCartItem]);
   }
 

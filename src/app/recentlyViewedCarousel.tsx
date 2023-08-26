@@ -27,18 +27,16 @@ export default function RecentlyViewedCarousel({ currProduct }: Props) {
   useEffect(() => {
     if (userObj) {
     const getRecentlyViewed = async (uid: string, currProduct: Product) => {
-
         const userSnapshot = await getDoc(doc(db, "users", uid));
         if (userSnapshot) {
           const userDoc = userSnapshot.data();
           var recentlyViewed = [...userDoc.recently_viewed];
           console.log('recentlyViewed', recentlyViewed)
           if (currProduct && !recentlyViewed.find((p) => p.id === currProduct.id)) {
-            if (recentlyViewed.length > 10) {
+            if (recentlyViewed.length >= 10) {
               recentlyViewed.shift();
             }
-            recentlyViewed.push(currProduct);
-            recentlyViewed.reverse()
+            recentlyViewed.unshift(currProduct);
     
           setProducts(recentlyViewed)
           await updateDoc(doc(db, "users", uid), {
