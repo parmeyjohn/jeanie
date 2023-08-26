@@ -14,12 +14,12 @@ import "firebaseui/dist/firebaseui.css";
 import { auth } from "../../firebase.config";
 import { CartItem, Product } from "../../types";
 
-import { CartContextProvider } from "./cartContext";
 
 
 
 
 export const UserContext = createContext({})
+export const CartContext = createContext([])
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,13 +42,12 @@ export default function RootLayout({
 
   useEffect(() => {
     console.log('user here', user)
-    console.log(typeof(user))
     setUserObj(user)
   }, [user])
 
   return (
     <UserContext.Provider value= {{userObj, setUserObj}}>   
-      <CartContextProvider>
+      <CartContext.Provider value= {{cart, setCart}}>
       <html lang="en">
         <body
           className={`w-screen h-auto bg-gradient-to-tl from-indigo-200 to-indigo-100 overflow-y-auto overflow-x-hidden ${inter.className}`}
@@ -230,7 +229,7 @@ export default function RootLayout({
           </footer>
         </body>
       </html>
-    </CartContextProvider>
+    </CartContext.Provider>
     </UserContext.Provider>
  
   );

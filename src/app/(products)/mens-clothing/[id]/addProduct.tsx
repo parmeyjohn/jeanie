@@ -2,18 +2,19 @@
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Product, CartItem } from "../../../../../types";
-import { useCartContext } from "@/app/cartContext";
+import { CartContext } from "@/app/layout";
+
 
 export default function AddProduct(currProduct: any) {
   const router = useRouter();
-  var [newQuantity, setNewQuantity] = useState(1);
+  const [newQuantity, setNewQuantity] = useState(1);
   const [sizes, setSizes] = useState(["S", "M", "L", "XL", "XXL"]);
-  var [currSize, setCurrSize] = useState("S")
-  const { cart, setCart } = useCartContext();
+  const [currSize, setCurrSize] = useState("S")
+  const { cart, setCart } = useContext(CartContext)
 
-  function addToCart(e: any) {
+  const addToCart = (e: any) => {
     e.preventDefault();
     if (cart.length > 0) {
       let index = cart.map((e: any) => e.product).indexOf(currProduct);
@@ -21,11 +22,12 @@ export default function AddProduct(currProduct: any) {
         setNewQuantity(newQuantity + cart[index].quantity);
       }
     }
-    var newCartItem = { product: { ...currProduct }, quantity: newQuantity };
+    console.log(currProduct)
+    var newCartItem = { currProduct, quantity: newQuantity, size: currSize };
     setCart([...cart, newCartItem]);
   }
 
-  async function handleSubmit(e: FormEvent) {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const res = await axios.post(`${process.env.BASE_URL}/checkout`, {
       headers: {
@@ -34,6 +36,9 @@ export default function AddProduct(currProduct: any) {
     });
     router.push(res.data);
   }
+  useEffect(() => {
+    console.log(cart)
+  }, [cart])
 
   return (
     <form>
