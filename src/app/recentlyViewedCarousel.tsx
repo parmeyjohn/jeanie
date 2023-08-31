@@ -6,16 +6,17 @@ import { db, auth } from "../../firebase.config";
 import { Product } from "../../types";
 import { UserContext } from "./layout";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FaUser } from "react-icons/fa";
+import Link from "next/link";
+
 
 interface Props {
   currProduct: Product | null;
 }
 
 export default function RecentlyViewedCarousel({ currProduct }: Props) {
-  const [products, setProducts] = useState([]);
   const [user, loading, error] = useAuthState(auth);
-
-  // fetch recently viewed products from user on firebase
+  const [products, setProducts] = useState([]);
   const [scrollIndex, setScrollIndex] = useState(0);
 
   // width of the carousel on current screen
@@ -59,28 +60,13 @@ useEffect(() => {
 }, [products, setProducts])
 
   const handleButtonForward = () => {
-    //setLeftIndexBound(leftIndexBound + width)
-    //setRightIndexBound(rightIndexBound + width)
     containerRef.current.scrollLeft += containerRef.current.clientWidth;
     setScrollIndex((prev) => prev + width);
-    // ref.current[scrollIndex + width].scrollIntoView({
-    //   behavior: "smooth",
-    //   block: "nearest",
-    //   inline: "start",
-    // });
   };
 
   const handleButtonBack = () => {
-    //setLeftIndexBound(leftIndexBound - width)
-    //setRightIndexBound(rightIndexBound - width)
     containerRef.current.scrollLeft -= containerRef.current.clientWidth;
     setScrollIndex((prev) => prev - width);
-
-    // ref.current[scrollIndex - width].scrollIntoView({
-    //   behavior: "smooth",
-    //   block: "nearest",
-    //   inline: "start",
-    // });
   };
 
   return (
@@ -111,7 +97,7 @@ useEffect(() => {
         </button>
         <div
           ref={containerRef}
-          className="no-scrollbar overflow-x-auto flex justify-start snap-x"
+          className="no-scrollbar overflow-x-auto flex justify-start snap-x w-full h-full"
         >
           {user ? ((products.length > 0) ? products.map((p, index) =>
           (<div
@@ -129,19 +115,33 @@ useEffect(() => {
                 </div>
                 <h5>Recently viewed items will show up here</h5>
               </div>))
-            : (<div className="w-full h-full ">
-                <div className="flex justify-center items-center">
-                  <h4>Login to see your recently viewed items!</h4>
-                  <div>
-                    <button>
-                      Login
+            : (<div className="w-full h-80 flex justify-center items-center">
+                  <div className="w-fit h-fit">
+                  <h4 className="text-lg font-semibold text-center">Sign in to see your recently viewed items!</h4>
+
+                  <div className="flex justify-center my-10">
+                    <Link
+                      href="/login">
+                    <button className="w-32 mr-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-md bg-indigo-600 hover:bg-indigo-700 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out p-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2 ">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                      </svg>
+                      Sign in
                     </button>
-                    <button>
-                      Signup
+                    </Link>
+                    <Link
+                      href="/signup">
+                    <button className="w-32 ml-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-md bg-indigo-600 hover:bg-indigo-700 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out p-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                      </svg>
+
+                      Sign up
                     </button>
+                    </Link>
                   </div>
                 </div>
-            </div>)}
+                </div>)}
       </div>
       <button
           onClick={handleButtonForward}

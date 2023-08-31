@@ -1,6 +1,7 @@
 import ProductCarousel from "./productCarousel";
 import Image from "next/image";
 import Link from "next/link";
+import RecentlyViewedCarousel from "./recentlyViewedCarousel";
 
 export default function Home() {
   return (
@@ -103,7 +104,7 @@ export default function Home() {
 
         <div className="mb-16">
           <h2 className="text-lg font-semibold">Recently Viewed</h2>
-          <ProductCarousel></ProductCarousel>
+          <RecentlyViewedCarousel currProduct={null}></RecentlyViewedCarousel>
         </div>
       </div>
     </main>

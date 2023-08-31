@@ -16,6 +16,7 @@ export default function SignUp() {
         e.preventDefault()
         try {
             var cred = await createUserWithEmailAndPassword(auth, email, password)
+            localStorage.setItem('cart', JSON.stringify([]))
             await setDoc(doc(db, "users", cred.user.uid), {
                 recently_viewed: []
               });

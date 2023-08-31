@@ -45,6 +45,16 @@ export default function RootLayout({
     setUserObj(user)
   }, [user])
 
+  useEffect(() => {
+    let cartItems = localStorage.getItem('cart')
+    if (cartItems) {
+      cartItems = JSON.parse(cartItems)
+    } else {
+      cartItems = []
+    }
+    setCart(cartItems)
+  }, [])
+
   return (
     <UserContext.Provider value= {{userObj, setUserObj}}>   
       <CartContext.Provider value= {{cart, setCart}}>

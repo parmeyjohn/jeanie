@@ -7,7 +7,7 @@ export default function EmailSignUp() {
   const [signedUp, setSignedUp] = useState(false);
   if (showWindow) {
     return (
-      <div className="flex border mb-8 p-4 h-44 shadow-lg shadow-indigo-300 border-indigo-500 bg-gradient-to-tr from-indigo-300 to-indigo-200 rounded-xl max-w-4xl relative">
+      <div className="flex border my-16 p-4 h-44 shadow-lg shadow-indigo-300 border-indigo-500 bg-gradient-to-tr from-indigo-300 to-indigo-200 rounded-xl max-w-4xl relative">
         <div
           onClick={() => setShowWindow(false)}
           className="absolute right-0 top-0 m-4 p-2 hover:bg-indigo-300 rounded-full transition-all ease-linear duration-100 cursor-pointer "
