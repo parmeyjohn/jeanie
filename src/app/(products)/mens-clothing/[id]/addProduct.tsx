@@ -12,15 +12,10 @@ export default function AddProduct(currProduct: any) {
   const [newQuantity, setNewQuantity] = useState(1);
   const [sizes, setSizes] = useState(["S", "M", "L", "XL", "XXL"]);
   const [currSize, setCurrSize] = useState("S")
+  const {cart, setCart} = useContext(CartContext)
 
   const addToCart = (e: any) => {
     e.preventDefault();
-    let cart = localStorage.getItem('cart')
-    if (cart) {
-      cart = JSON.parse(cart)
-    } else {
-      cart = []
-    }
 
     if (cart.length > 0) {
       let index = cart.map((e: any) => e.product).indexOf(currProduct);
@@ -29,10 +24,10 @@ export default function AddProduct(currProduct: any) {
       }
     }
     console.log(currProduct)
-    var newCartItem = { ...currProduct, quantity: newQuantity, size: currSize };
-    let newCart = [...cart, newCartItem]
-    console.log(cart, newCart)
-    localStorage.setItem('cart', JSON.stringify(newCart))
+    const newCart = [...cart, { ...currProduct, quantity: newQuantity, size: currSize }]
+    setCart(newCart);
+    
+    localStorage.setItem('cart', JSON.stringify())
   }
 
   const handleSubmit = async (e: FormEvent) => {
