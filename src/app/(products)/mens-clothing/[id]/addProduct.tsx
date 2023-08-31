@@ -27,7 +27,7 @@ export default function AddProduct(currProduct: any) {
     const newCart = [...cart, { ...currProduct, quantity: newQuantity, size: currSize }]
     setCart(newCart);
     
-    localStorage.setItem('cart', JSON.stringify())
+    localStorage.setItem('cart', JSON.stringify(newCart))
   }
 
   const handleSubmit = async (e: FormEvent) => {
