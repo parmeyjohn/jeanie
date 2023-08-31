@@ -53,7 +53,7 @@ export default function AddProduct(currProduct: any) {
                 e.preventDefault()
                 setCurrSize(s);
               }}
-              className={` flex justify-center items-center w-10 h-10 mx-2 my-1 bg-white border border-indigo-300 hover:shadow-indigo-300 hover:border-indigo-400 p-2 rounded-md hover:bg-indigo-200 hover:shadow-lg active:bg-indigo-400 active:shadow-sm transition-all duration-100 ease-in-out ${currSize === s ? 'border-2 border-indigo-700 bg-indigo-300' : ''}`}
+              className={` flex justify-center items-center w-10 h-10 mx-2 my-1 bg-white border border-indigo-300 hover:border-indigo-400 p-2 rounded-md hover:bg-indigo-200 hover:shadow-lg active:bg-indigo-400 active:shadow-sm transition-all duration-25 ease-in-out ${currSize === s ? 'border-2 border-indigo-700 bg-indigo-300' : ''}`}
             >
               {s}
             </button>

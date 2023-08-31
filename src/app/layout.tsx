@@ -50,7 +50,7 @@ export default function RootLayout({
       <CartContext.Provider value= {{cart, setCart}}>
       <html lang="en">
         <body
-          className={`w-screen h-auto bg-gradient-to-tl from-indigo-200 to-indigo-100 overflow-y-auto overflow-x-hidden ${inter.className}`}
+          className={`w-screen h-auto bg-slate-200 overflow-y-auto overflow-x-hidden ${inter.className}`}
         >
           {showSearch && (
             <div className=" bg-slate-600 mx-auto absolute z-10 w-full flex justify-center items-center">

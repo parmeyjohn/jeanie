@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase.config";
 import { Product } from "../../types";
 import { UserContext } from "./layout";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 interface Props {
   currProduct: Product | null;
@@ -12,11 +13,10 @@ interface Props {
 
 export default function RecentlyViewedCarousel({ currProduct }: Props) {
   const [products, setProducts] = useState([]);
-  //const [user, loading, error] = useAuthState(auth);
-  const { userObj, setUserObj } = useContext(UserContext);
+  const [user, loading, error] = useAuthState(auth);
 
   // fetch recently viewed products from user on firebase
-  const [scrollIndex, setScrollIndex] = useState<number>(0);
+  const [scrollIndex, setScrollIndex] = useState(0);
 
   // width of the carousel on current screen
   const width = 3;
@@ -25,7 +25,7 @@ export default function RecentlyViewedCarousel({ currProduct }: Props) {
 
 
   useEffect(() => {
-    if (userObj) {
+    if (user) {
     const getRecentlyViewed = async (uid: string, currProduct: Product) => {
         const userSnapshot = await getDoc(doc(db, "users", uid));
         if (userSnapshot) {
@@ -38,19 +38,21 @@ export default function RecentlyViewedCarousel({ currProduct }: Props) {
             }
             recentlyViewed.unshift(currProduct);
     
-          setProducts(recentlyViewed)
+            console.log('this is working')
+            
           await updateDoc(doc(db, "users", uid), {
             recently_viewed: recentlyViewed,
           })}
+          setProducts(recentlyViewed)
     }}
       
     try {
-      getRecentlyViewed(userObj.uid, currProduct)
+      getRecentlyViewed(user.uid, currProduct)
     } catch (e) {
       console.log('error', e)
     }
 
-  }}, [])
+  }}, [loading])
 
 useEffect(() => {
 
@@ -60,33 +62,34 @@ useEffect(() => {
     //setLeftIndexBound(leftIndexBound + width)
     //setRightIndexBound(rightIndexBound + width)
     containerRef.current.scrollLeft += containerRef.current.clientWidth;
-    setScrollIndex(() => scrollIndex + width);
-    ref.current[scrollIndex + width].scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start",
-    });
+    setScrollIndex((prev) => prev + width);
+    // ref.current[scrollIndex + width].scrollIntoView({
+    //   behavior: "smooth",
+    //   block: "nearest",
+    //   inline: "start",
+    // });
   };
 
   const handleButtonBack = () => {
     //setLeftIndexBound(leftIndexBound - width)
     //setRightIndexBound(rightIndexBound - width)
-    setScrollIndex(() => scrollIndex - width);
     containerRef.current.scrollLeft -= containerRef.current.clientWidth;
-    ref.current[scrollIndex - width].scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start",
-    });
+    setScrollIndex((prev) => prev - width);
+
+    // ref.current[scrollIndex - width].scrollIntoView({
+    //   behavior: "smooth",
+    //   block: "nearest",
+    //   inline: "start",
+    // });
   };
 
   return (
     <div className="w-full px-4 mb-8">
-      <div className="relative flex w-full h-fit justify-center items-center">
+      <div className="relative flex w-full h-fit justify-start items-center">
         <button
           onClick={handleButtonBack}
           className={
-            scrollIndex - width >= products.length
+            scrollIndex - width >= 0
               ? "absolute -left-16 top-50 z-20 text-indigo-800 border border-indigo-600 hover:bg-indigo-400 transition-all ease-linear duration-100 p-2 cursor-pointer mx-2 bg-indigo-300 border-b-2 border-b-indigo-800 rounded-full"
               : "absolute -left-16 top-50 z-20 border border-slate-600 transition-all ease-linear duration-100 p-2 pointer-events-none mx-2 bg-slate-400 border-b-slate-800 rounded-full"
           }
@@ -108,16 +111,17 @@ useEffect(() => {
         </button>
         <div
           ref={containerRef}
-          className="no-scrollbar overflow-x-auto flex justify-start"
+          className="no-scrollbar overflow-x-auto flex justify-start snap-x"
         >
-          {userObj ? ((products.length > 0) ? products.map((p, index) =>
+          {user ? ((products.length > 0) ? products.map((p, index) =>
           (<div
             key={p.id}
+            className="snap-start"
           >
             <ProductCard {...p}></ProductCard>
           </div>)
           )
-            : (<div className="flex-col w-full h-80 justify-center items-center">
+            : (<div className="flex-col w-full h-80 justify-start items-center">
                 <h4>Get started by browsing a department</h4>
                 <div className="flex">
                   <button>Men</button>

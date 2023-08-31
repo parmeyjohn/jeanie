@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Image from "next/image";
 
 import { Product } from "../../../../../types";
@@ -18,12 +18,15 @@ export default function ImageCarousel({
   return (
     <div className="flex">
       <div className="relative w-80 h-96">
-        <Image
-          className="rounded-xl w-10 h-10 border border-indigo-500 transition-all"
-          fill={true}
-          src={activeImgUrl}
-          alt={product.title}
-        ></Image>
+        <Suspense fallback={<div className="bg-red-900 w-20 h-20"></div>}>
+          <Image
+            className="rounded-xl w-10 h-10 border border-indigo-500 transition-all"
+            fill={true}
+            src={activeImgUrl}
+            alt={product.title}
+            sizes='500px'
+          ></Image>
+        </Suspense>
       </div>
       <div className="flex flex-col justify-start ml-4">
         {imageUrls.map((img: string, i: any) => (
@@ -40,6 +43,7 @@ export default function ImageCarousel({
                 activeImgUrl === img ? "border-2 border-indigo-500" : ""
               } rounded-md border-2`}
               fill={true}
+              sizes='100px'
               src={img}
               alt={`${product.title} alt image ${i + 1}`}
             ></Image>
