@@ -189,9 +189,14 @@ export default function RootLayout({
               {pathname !== "/login" && user === null && (
                 <Link
                   href="/login"
-                  className="absolute -right-24 top-0  z-[60] font-medium p-2 m-2 transition-all  ease-in-out duration-100 text-md rounded-md cursor-pointer border-b-2 border-slate-800 text-slate-100 bg-slate-600 hover:bg-slate-700 hover:text-slate-50 flex"
+                  className="absolute -right-48 top-0  z-[60]"
                 >
-                  Sign in
+                   <button className="w-28 p-2 mr-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-800 border-b-2 border-indigo-800 shadow-md border border-indigo-800 hover:bg-indigo-400 bg-indigo-300 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                      </svg>
+                      Sign up
+                      </button>
                 </Link>
               )}
             </div>
