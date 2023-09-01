@@ -23,7 +23,6 @@ export default async function ProductPage({ params }: any) {
   return (
     <div className="w-full h-auto">
       <div className="max-w-4xl mx-auto">
-        <h2 className=" p-4">Men {product.category}</h2>
         <div className="flex justify-between mb-8">
           <div className="w-full max-w-4xl flex justify-between p-8">
             <ImageCarousel
