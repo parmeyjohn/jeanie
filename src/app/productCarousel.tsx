@@ -8,6 +8,7 @@ import { UserContext } from "./layout";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaUser } from "react-icons/fa";
 import Link from "next/link";
+import LoadingProductCard from "./loadingProductCard";
 
 
 interface Props {
@@ -87,7 +88,13 @@ export default function RecentlyViewedCarousel({ currProduct }: Props) {
             className="snap-start"
           >
             <ProductCard {...p}></ProductCard>
-          </div>)) : (<div>Not rendered</div>)
+          </div>)) : (
+          <div className="no-scrollbar overflow-x-auto flex justify-start snap-x w-full h-full">
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+            <LoadingProductCard></LoadingProductCard>
+          </div>)
             }
       </div>
       <button

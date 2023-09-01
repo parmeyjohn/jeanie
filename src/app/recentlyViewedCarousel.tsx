@@ -27,7 +27,7 @@ export default function RecentlyViewedCarousel({ currProduct }: Props) {
 
   useEffect(() => {
     if (user) {
-    const getRecentlyViewed = async (uid: string, currProduct: Product) => {
+      const getRecentlyViewed = async (uid: string, currProduct: Product) => {
         const userSnapshot = await getDoc(doc(db, "users", uid));
         if (userSnapshot) {
           const userDoc = userSnapshot.data();
@@ -38,26 +38,29 @@ export default function RecentlyViewedCarousel({ currProduct }: Props) {
               recentlyViewed.shift();
             }
             recentlyViewed.unshift(currProduct);
-    
+
             console.log('this is working')
-            
-          await updateDoc(doc(db, "users", uid), {
-            recently_viewed: recentlyViewed,
-          })}
+
+            await updateDoc(doc(db, "users", uid), {
+              recently_viewed: recentlyViewed,
+            })
+          }
           setProducts(recentlyViewed)
-    }}
-      
-    try {
-      getRecentlyViewed(user.uid, currProduct)
-    } catch (e) {
-      console.log('error', e)
+        }
+      }
+
+      try {
+        getRecentlyViewed(user.uid, currProduct)
+      } catch (e) {
+        console.log('error', e)
+      }
+
     }
+  }, [loading])
 
-  }}, [loading])
+  useEffect(() => {
 
-useEffect(() => {
-
-}, [products, setProducts])
+  }, [products, setProducts])
 
   const handleButtonForward = () => {
     containerRef.current.scrollLeft += containerRef.current.clientWidth;
@@ -107,30 +110,50 @@ useEffect(() => {
             <ProductCard {...p}></ProductCard>
           </div>)
           )
-            : (<div className="flex-col w-full h-80 justify-start items-center">
-                <h4>Get started by browsing a department</h4>
-                <div className="flex">
-                  <button>Men</button>
-                  <button>Women</button>
-                </div>
-                <h5>Recently viewed items will show up here</h5>
-              </div>))
             : (<div className="w-full h-80 flex justify-center items-center">
-                  <div className="w-fit h-fit">
-                  <h4 className="text-lg font-semibold text-center">Sign in to see your recently viewed items!</h4>
+            <div className="w-fit h-fit">
+              <h4 className="text-lg font-semibold text-center">You haven't viewed any items...</h4>
+              <h3>Browse below and your recently viewed items will show up here!</h3>
 
-                  <div className="flex justify-center my-10">
-                    <Link
-                      href="/login">
+              <div className="flex justify-center my-10">
+                <Link
+                  href="/mens-clothing">
+                  <button className="w-32 mr-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-md bg-indigo-600 hover:bg-indigo-700 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out p-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2 ">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                    </svg>
+                    Men
+                  </button>
+                </Link>
+                <Link
+                  href="/womens-clothing">
+                  <button className="w-32 ml-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-md bg-indigo-600 hover:bg-indigo-700 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out p-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                    </svg>
+
+                    Women
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>))
+            : (<div className="w-full h-80 flex justify-center items-center">
+              <div className="w-fit h-fit">
+                <h4 className="text-lg font-semibold text-center">Sign in to see your recently viewed items!</h4>
+
+                <div className="flex justify-center my-10">
+                  <Link
+                    href="/login">
                     <button className="w-32 mr-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-md bg-indigo-600 hover:bg-indigo-700 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out p-4">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2 ">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
                       </svg>
                       Sign in
                     </button>
-                    </Link>
-                    <Link
-                      href="/signup">
+                  </Link>
+                  <Link
+                    href="/signup">
                     <button className="w-32 ml-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-50 border-b-2 border-indigo-800 shadow-md bg-indigo-600 hover:bg-indigo-700 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out p-4">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
@@ -138,12 +161,12 @@ useEffect(() => {
 
                       Sign up
                     </button>
-                    </Link>
-                  </div>
+                  </Link>
                 </div>
-                </div>)}
-      </div>
-      <button
+              </div>
+            </div>)}
+        </div>
+        <button
           onClick={handleButtonForward}
           className={
             scrollIndex + width < products.length
@@ -166,7 +189,7 @@ useEffect(() => {
             />
           </svg>
         </button>
-    </div>
+      </div>
     </div>
   );
 }
