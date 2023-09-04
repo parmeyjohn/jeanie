@@ -10,6 +10,7 @@ export default function Cart() {
 
     useEffect(() => {
         setCart(prev => [])
+        localStorage.clear()
     }, [])
 
     return (

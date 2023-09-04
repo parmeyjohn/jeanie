@@ -6,18 +6,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {typescript: true, apiV
 
 
 export async function POST(request:NextRequest) {
-    const product = {
-        name: "name",
-        price: 19.99,
-        quantity: 3
-
-    }
     var items = []
-    
     const cart = await request.json()
-    console.log(cart)
     for (const cartItem of cart) {
-        //console.log(cartItem.currProduct)
         items.push(
             {
                 price_data: {
@@ -32,17 +23,13 @@ export async function POST(request:NextRequest) {
             }
         )
     }
-    
-    console.log('new items', items)
-    //const cart = JSON.parse()
-    //console.log(cart)
-    console.log(Math.round(product.price * 100))
+
     try {
         const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
             mode: "payment",
             line_items: items,
-            success_url: `${process.env.BASE_URL}`,
+            success_url: `${process.env.BASE_URL}/success`,
             cancel_url: `${process.env.BASE_URL}`,
         })
         return NextResponse.json({url: session.url}); 

@@ -36,7 +36,7 @@ export default function Cart() {
   }
 
   useEffect(() => {
-  
+  console.log('new cart',cart)
   }, [cart]);
 
   return (

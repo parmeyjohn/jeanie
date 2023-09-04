@@ -40,7 +40,9 @@ export default function CartComponent({setCart, c}) {
                 onChange={(e) => {
                     setCart((prev) => prev.map((cartItem) => {
                         if (cartItem.currProduct.id === c.currProduct.id) {
-                            return {...c, quantity: e.target.value}
+                            return {...c, quantity: c.quantity + 1}
+                        } else {
+                            return cartItem
                         }
                     }))
                 }
