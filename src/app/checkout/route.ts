@@ -31,6 +31,7 @@ export async function POST(request:NextRequest) {
             line_items: items,
             success_url: `${process.env.BASE_URL}/success`,
             cancel_url: `${process.env.BASE_URL}`,
+            allow_promotion_codes: true
         })
         return NextResponse.json({url: session.url}); 
             

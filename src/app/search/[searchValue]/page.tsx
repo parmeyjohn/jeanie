@@ -8,19 +8,18 @@ import ProductCard from "../../productCard";
 import { Product } from "../../../../types";
 import Link from "next/link";
 import LoadingProductCard from "@/app/loadingProductCard";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function MensClothing() {
-  const [imgUrl, setImgUrl] = useState("");
+export default function Search({params}) {
   const [sorting, setSorting] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLength, setProductsLength] = useState<number>(0);
   const [categories, setCategories] = useState<string[]>([]);
-  const [currCategories, setCurrCategories] = useState<Set<string>>(new Set());
-
+  const [currCategories, setCurrCategories] = useState<Set<string>>(new Set()); 
+  const [searchVal, setSearchVal] = useState(params.searchValue.toLowerCase() || "")
 
   useEffect(() => {
-    //getImages().then((res) => setImgUrl(res))
-    //console.log(productsRef)
+    console.log(searchVal)
     getObjects();
   }, []);
 
@@ -34,17 +33,19 @@ export default function MensClothing() {
   }, [currCategories]);
 
   const getObjects = async () => {
-    const query = await getDocs(collection(db, "men"));
     var productArray: Array<Product> = [];
-    query.forEach((doc) => productArray.push(doc.data() as Product));
-    console.log(productArray);
-    setProductsLength(productArray.length);
-    setProducts(productArray.sort((a, b) => a.id - b.id));
+    const query1 = await getDocs(collection(db, "men"));
+    const query2 = await getDocs(collection(db, "women"))
+    query1.forEach((doc) => productArray.push(doc.data() as Product));
+    query2.forEach((doc) => productArray.push(doc.data() as Product));
+    console.log(productArray)
+    productArray = productArray.filter(x => x.title.toLowerCase().includes(searchVal))
+    setProductsLength(prev => productArray.length);
+    setProducts(prev => productArray);
+    console.log(productArray)
     var m = new Set(productArray.map((p) => p.category));
-    setCategories(Array.from(m.values()));
-    console.log("categories", m);
+    setCategories(prev => Array.from(m.values()));
   };
-
 
   function sortProducts(e: any) {
     setSorting(e.target.text);
@@ -72,7 +73,7 @@ export default function MensClothing() {
     <div className="w-full max-w-4xl mx-auto h-full">
       <div className="flex justify-between items-center ml-4">
         <div className="">
-          <h1 className="text-lg font-medium mt-4">Men's Clothing:</h1>
+          <h1 className="text-lg font-medium mt-4">All Clothing:</h1>
           {productsLength > 0 ?
             <h2 className="ml-2 text-slate-500">{productsLength} products</h2>
             : <div className="ml-2 h-6 w-24 animate-pulse bg-indigo-400 rounded-md"></div>}

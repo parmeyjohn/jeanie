@@ -13,13 +13,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "firebaseui/dist/firebaseui.css";
 import { auth } from "../../firebase.config";
 import { CartItem, Product } from "../../types";
+import { useRouter } from "next/navigation";
 
-
-
-
-
-export const UserContext = createContext({})
-export const CartContext = createContext([])
+export const UserContext = createContext({});
+export const CartContext = createContext([]);
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,219 +31,260 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
   const [showSearch, setShowSearch] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [cart, setCart] = useState(Array<CartItem>);
-  const [userObj, setUserObj] = useState({})
+  const [userObj, setUserObj] = useState({});
+  const [searchVal, setSearchVal] = useState("");
+  useEffect(() => {
+    console.log("user here", user);
+    setUserObj(user);
+  }, [user]);
 
   useEffect(() => {
-    console.log('user here', user)
-    setUserObj(user)
-  }, [user])
-
-  useEffect(() => {
-
-    let cartItems = localStorage.getItem('cart')
+    let cartItems = localStorage.getItem("cart");
     if (cartItems) {
-      cartItems = JSON.parse(cartItems)
+      cartItems = JSON.parse(cartItems);
     } else {
-      cartItems = []
+      cartItems = [];
     }
-    setCart(cartItems)
-  }, [])
+    setCart(cartItems);
+  }, []);
 
+  const handleEnter = (e) => {
+    if (searchVal.length > 0 && e.key === "Enter") {
+      e.preventDefault();
+      if (pathname.includes('/search')) {
+        router.replace(`/search/${searchVal}`);
+      } else {
+      router.push(`/search/${searchVal}`);
+      }
+    }
+  };
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (searchVal.length > 0) {
+      if (pathname.includes('/search')) {
+        router.replace(`/search/${searchVal}`);
+      } else {
+        router.push(`/search/${searchVal}`);
+      }}
+  };
   return (
-    <UserContext.Provider value= {{userObj, setUserObj}}>   
-      <CartContext.Provider value= {{cart, setCart}}>
-      <html lang="en">
-        <body
-          className={`w-screen h-auto bg-slate-200 overflow-y-auto overflow-x-hidden ${inter.className}`}
-        >
-          {showSearch && (
-            <div className=" bg-slate-600 mx-auto absolute z-10 w-full flex justify-center items-center">
-              <div className="p-2 m-2 max-w-4xl w-full flex items-center relative">
-                <input
-                  className="w-3xl p-2 w-[80%] rounded-lg"
-                  placeholder="Search our products"
-                ></input>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 absolute right-52"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                  />
-                </svg>
-              </div>
-              <button
-                className="font-medium p-2 m-2 text-md transition-all  ease-in-out duration-100 cursor-pointer hover:bg-slate-300 flex justify-center items-center hover:rounded-md hover:font-semibold"
-                onClick={() => setShowSearch(false)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          )}
-
-          <nav className="flex justify-between items-center h-16 mx-auto text-black bg-slate-100 max-w-4xl rounded-b-xl border border-indigo-400 sticky top-0 z-50 border-t-0">
-            <div className="absolute top-5 left-[50%] z-50">
-              <h1 className="text-xl font-extrabold text-indigo-500 tracking-tighter hover:text-indigo-600">jeanie</h1>
-            </div>
-            <div className="flex justify-start">
-              <Link
-                href=""
-                className={
-                  "font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300"
-                }
-              >
-                Home
-              </Link>
-              <Link
-                href="/mens-clothing"
-                className={`${
-                  pathname.includes("/mens-clothing")
-                    ? "bg-indigo-200 border border-indigo-500"
-                    : ""
-                } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
-              >
-                Men
-              </Link>
-              <Link
-                href="/womens-clothing"
-                className={`${
-                  pathname.includes("/womens-clothing")
-                    ? "bg-indigo-200 border border-indigo-500"
-                    : ""
-                } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
-              >
-                Women
-              </Link>
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300"
-                onClick={() => setShowSearch(true)}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                  />
-                </svg>
-              </button>
-
-              <Link
-                href="/cart"
-                className={`${
-                  pathname.includes("/cart")
-                    ? "bg-indigo-200 border border-indigo-500"
-                    : ""
-                } flex font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md justify-center items-center shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                  />
-                </svg>
-                {cart.length > 0 ? cart.length : ""}
-              </Link>
-              {pathname !== "/login" && user === null && (
+    <UserContext.Provider value={{ userObj, setUserObj }}>
+      <CartContext.Provider value={{ cart, setCart }}>
+        <html lang="en">
+          <body
+            className={`w-screen h-auto bg-slate-200 overflow-y-auto overflow-x-hidden ${inter.className}`}
+          >
+            <nav className="flex justify-between items-center h-16 mx-auto text-black bg-slate-100 max-w-4xl rounded-b-xl border border-indigo-400 sticky top-0 z-50 border-t-0">
+              {showSearch ? (
+                <div className="flex items-center absolute top-4 w-96 left-[33%] mx-auto">
+                  <input
+                    onKeyDown={handleEnter}
+                    autoFocus={true}
+                    onChange={(e) => setSearchVal(e.target.value)}
+                    value={searchVal}
+                    className="border border-indigo-500 p-1 rounded-md w-96"
+                    placeholder="Search"
+                  ></input>
+                  <button
+                    className="absolute right-4 m-1 hover:bg-indigo-200 hover:rounded-full transition-all duration-50"
+                    onClick={handleClick}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <div className="absolute top-5 left-[50%] z-50">
+                  <h1 className="text-xl font-extrabold text-indigo-500 tracking-tighter hover:text-indigo-600">
+                    jeanie
+                  </h1>
+                </div>
+              )}
+              <div className="flex justify-start">
                 <Link
-                  href="/login"
-                  className="absolute -right-40 top-3 z-[60]"
+                  href=""
+                  className={
+                    "font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300"
+                  }
                 >
-                   <button className="w-28 p-2 mr-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-800 border-b-2 border-indigo-800 shadow-md border border-indigo-800 hover:bg-indigo-400 bg-indigo-300 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out">
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2 ">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                  Home
+                </Link>
+                <Link
+                  href="/mens-clothing"
+                  className={`${
+                    pathname.includes("/mens-clothing")
+                      ? "bg-indigo-200 border border-indigo-500"
+                      : ""
+                  } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
+                >
+                  Men
+                </Link>
+                <Link
+                  href="/womens-clothing"
+                  className={`${
+                    pathname.includes("/womens-clothing")
+                      ? "bg-indigo-200 border border-indigo-500"
+                      : ""
+                  } font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
+                >
+                  Women
+                </Link>
+              </div>
+
+              <div className="flex justify-end">
+                {showSearch ? (
+                  <button
+                    className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300"
+                    onClick={() => setShowSearch(false)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    className="font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300"
+                    onClick={() => setShowSearch(true)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                      />
+                    </svg>
+                  </button>
+                )}
+                <Link
+                  href="/cart"
+                  className={`${
+                    pathname.includes("/cart")
+                      ? "bg-indigo-200 border border-indigo-500"
+                      : ""
+                  } flex font-medium p-2 m-2 transition-all  ease-in-out duration-100 border border-transparent hover:font-semibold  text-md cursor-pointer hover:border-indigo-300 hover:bg-indigo-200 rounded-md hover:shadow-md justify-center items-center shadow-indigo-500 active:shadow-sm active:border-b active:border-b-indigo-600 active:bg-indigo-300`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                    />
+                  </svg>
+                  {cart.length > 0 ? cart.length : ""}
+                </Link>
+                {pathname !== "/login" && user === null && (
+                  <Link
+                    href="/login"
+                    className="absolute -right-40 top-3 z-[60]"
+                  >
+                    <button className="w-28 p-2 mr-4 flex justify-center items-center cursor-pointer rounded-md text-indigo-800 border-b-2 border-indigo-800 shadow-md border border-indigo-800 hover:bg-indigo-400 bg-indigo-300 hover:shadow-sm active:bg-indigo-800 active:shadow-xs transition-all duration-100 ease-in-out">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6 mr-2 "
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                        />
                       </svg>
                       Sign in
-                      </button>
-                </Link>
-              )}
-            </div>
-          </nav>
-          <div className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-100 ease-linear flex justify-center items-end h-16 rounded-xl w-[56rem] mx-auto -translate-y-5 -z-10">
-            <p className="p-[0.6rem] text-indigo-50 font-semibold">
-              20% off all styles using code 'NEWDENIM'
-            </p>
-          </div>
-          <div className="h-auto w-full  overflow-y-auto">{children}</div>
-          <footer className="w-full text-sm  transition-all ease-linear duration-100 h-16 bg-indigo-600 text-indigo-100 flex justify-around items-center">
-            <div className="p-2">Copyright 2023</div>
-
-            <div className="flex justify-between items-center w-fit p-2">
-              <a className="mx-4 hover:underline" href="#">
-                Contact Us
-              </a>
-              <a className="mx-4 hover:underline" href="#">
-                FAQ
-              </a>
-              <a className="mx-4 hover:underline" href="#">
-                Returns
-              </a>
-              <div className="flex">
-                <a
-                  href="https://www.twitter.com"
-                  className="point-on front px-2"
-                >
-                  <FaTwitter size="1.5rem" />
-                </a>
-                <a
-                  href="https://www.instagram.com"
-                  className="point-on front px-2"
-                >
-                  <FaInstagram size="1.5rem" />
-                </a>
-                <a
-                  href="https://www.facebook.com"
-                  className="point-on front px-2"
-                >
-                  <FaFacebook size="1.5rem" />
-                </a>
+                    </button>
+                  </Link>
+                )}
               </div>
+            </nav>
+            <div className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-100 ease-linear flex justify-center items-end h-16 rounded-xl w-[56rem] mx-auto -translate-y-5 -z-10">
+              <p className="p-[0.6rem] text-indigo-50 font-semibold">
+                20% off all styles using code 'NEWDENIM'
+              </p>
             </div>
-          </footer>
-        </body>
-      </html>
-    </CartContext.Provider>
+            <div className="h-auto w-full  overflow-y-auto">{children}</div>
+            <footer className="w-full text-sm  transition-all ease-linear duration-100 h-16 bg-indigo-600 text-indigo-100 flex justify-around items-center">
+              <div className="p-2">Copyright 2023</div>
+
+              <div className="flex justify-between items-center w-fit p-2">
+                <a className="mx-4 hover:underline" href="#">
+                  Contact Us
+                </a>
+                <a className="mx-4 hover:underline" href="#">
+                  FAQ
+                </a>
+                <a className="mx-4 hover:underline" href="#">
+                  Returns
+                </a>
+                <div className="flex">
+                  <a
+                    href="https://www.twitter.com"
+                    className="point-on front px-2"
+                  >
+                    <FaTwitter size="1.5rem" />
+                  </a>
+                  <a
+                    href="https://www.instagram.com"
+                    className="point-on front px-2"
+                  >
+                    <FaInstagram size="1.5rem" />
+                  </a>
+                  <a
+                    href="https://www.facebook.com"
+                    className="point-on front px-2"
+                  >
+                    <FaFacebook size="1.5rem" />
+                  </a>
+                </div>
+              </div>
+            </footer>
+          </body>
+        </html>
+      </CartContext.Provider>
     </UserContext.Provider>
- 
   );
 }
