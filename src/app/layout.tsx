@@ -204,7 +204,7 @@ export default function RootLayout({
           </nav>
           <div className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-100 ease-linear flex justify-center items-end h-16 rounded-xl w-[56rem] mx-auto -translate-y-5 -z-10">
             <p className="p-[0.6rem] text-indigo-50 font-semibold">
-              20% off all denim styles using code 'NEWDENIM'
+              20% off all styles using code 'NEWDENIM'
             </p>
           </div>
           <div className="h-auto w-full  overflow-y-auto">{children}</div>
