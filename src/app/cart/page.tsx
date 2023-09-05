@@ -39,6 +39,9 @@ export default function Cart() {
   console.log('new cart',cart)
   }, [cart]);
 
+  useEffect(() => {
+  }, [subtotal])
+
   return (
     <div className="flex flex-col max-w-4xl w-full min-h-screen mx-auto">
       {cart.length > 0 && 
@@ -87,7 +90,7 @@ export default function Cart() {
       <div className="w-full mx-auto border-b-2 rounded-xl">
         {cart.length > 0 ? (
           cart.map((c, i) => (
-            <CartComponent c={c} setCart={setCart} key={i}></CartComponent>
+            <CartComponent c={c} setCart={setCart} setSubtotal={setSubtotal} key={c.currProduct.id.toString() + c.size}></CartComponent>
           ))
         ) : (
           <div className="w-full h-80 flex flex-col justify-center items-center">

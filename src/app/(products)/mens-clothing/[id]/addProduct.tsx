@@ -16,29 +16,33 @@ export default function AddProduct(currProduct: any) {
 
   const addToCart = (e: any) => {
     e.preventDefault();
-
+    var newCart = []
     if (cart.length > 0) {
-      let index = cart.map((e: any) => e.product).indexOf(currProduct);
-      if (index >= 0) {
-        setNewQuantity(newQuantity + cart[index].quantity);
+      // if it's in the cart, increment the new quantity
+      
+      var found = false
+      for (var cartItem of cart) {
+        if (cartItem.currProduct.id === currProduct.currProduct.id && cartItem.size === currSize) {
+          found = true
+          console.log('setting')
+          newCart.push({ ...currProduct, quantity: cartItem.quantity + newQuantity, size: currSize })
+          //setNewQuantity(prev => prev + cartItem.quantity)
+        } else {
+          newCart.push(cartItem)
+        }
       }
     }
-    console.log(currProduct)
-    const newCart = [...cart, { ...currProduct, quantity: newQuantity, size: currSize }]
-    setCart(newCart);
     
+    if (!found) {
+      newCart.push({ ...currProduct, quantity: newQuantity, size: currSize })
+    }
+    //const newCart = [...cart.filter(item => item.currProduct.id != currProduct.currProduct.id), ]
+    setCart(newCart);
+    // check that for each cart item
     localStorage.setItem('cart', JSON.stringify(newCart))
   }
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    const res = await axios.post(`${process.env.BASE_URL}/checkout`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    router.push(res.data);
-  }
+  
   useEffect(() => {
     console.log(cart)
   }, [cart])

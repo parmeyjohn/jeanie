@@ -31,21 +31,23 @@ export default function RecentlyViewedCarousel({ currProduct }: Props) {
         const userSnapshot = await getDoc(doc(db, "users", uid));
         if (userSnapshot) {
           const userDoc = userSnapshot.data();
-          var recentlyViewed = [...userDoc.recently_viewed];
-          console.log('recentlyViewed', recentlyViewed)
-          if (currProduct && !recentlyViewed.find((p) => p.id === currProduct.id)) {
-            if (recentlyViewed.length >= 10) {
-              recentlyViewed.shift();
+          if (userDoc) {
+            var recentlyViewed = [...userDoc.recently_viewed];
+            console.log('recentlyViewed', recentlyViewed)
+            if (currProduct && !recentlyViewed.find((p) => p.id === currProduct.id)) {
+              if (recentlyViewed.length >= 10) {
+                recentlyViewed.shift();
+              }
+              recentlyViewed.unshift(currProduct);
+
+              console.log('this is working')
+
+              await updateDoc(doc(db, "users", uid), {
+                recently_viewed: recentlyViewed,
+              })
             }
-            recentlyViewed.unshift(currProduct);
-
-            console.log('this is working')
-
-            await updateDoc(doc(db, "users", uid), {
-              recently_viewed: recentlyViewed,
-            })
+            setProducts(recentlyViewed)
           }
-          setProducts(recentlyViewed)
         }
       }
 

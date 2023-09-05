@@ -6,12 +6,13 @@ import Link from "next/link";
 import { auth, db } from "../../../firebase.config"
 import { doc, setDoc, addDoc, getDocs, collection } from "firebase/firestore";
 import { useUserStore } from "../userGeneration";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const { setUserId } = useUserStore()
-
+    const router = useRouter()
     const signUp = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault()
         try {
@@ -21,6 +22,7 @@ export default function SignUp() {
                 recently_viewed: []
             });
             setUserId(cred.user.uid)
+            router.replace('/')
         } catch (error) {
             console.log(error)
         }
