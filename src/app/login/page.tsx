@@ -21,7 +21,7 @@ export default function Login() {
 
     return (
         <div className='w-screen h-screen flex justify-center items-center'>
-            <div className="relative border border-indigo-400 bg-indigo-50 rounded-lg shadow-xl w-96 h-auto p-4">
+            <div className="relative border border-indigo-400 bg-indigo-50 rounded-lg shadow-xl w-96 -top-24 h-auto p-4">
                 <Link href='/' className="absolute -top-20 -right-20 font-medium rounded-full p-2 m-2 text-md transition-all  ease-in-out duration-100 cursor-pointer hover:bg-indigo-300">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

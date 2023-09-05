@@ -78,7 +78,7 @@ export default function RootLayout({
       <CartContext.Provider value={{ cart, setCart }}>
         <html lang="en">
           <body
-            className={`w-screen h-auto bg-slate-200 overflow-y-auto overflow-x-hidden ${inter.className}`}
+            className={`w-screen h-auto min-h-screen bg-slate-200 overflow-y-auto overflow-x-hidden ${inter.className}`}
           >
             <nav className="flex justify-between items-center h-16 mx-auto text-black bg-slate-100 max-w-4xl rounded-b-xl border border-indigo-400 sticky top-0 z-50 border-t-0">
               {showSearch ? (
