@@ -20,8 +20,8 @@ Users can browse different departments of clothing depending on their preference
 ## Tech
 
 Most of the tech decisions were either frameworks I've heard great things about or ones I wanted to personally try out. Here are some of my thoughts on each technology I used:
-* **NextJS**: Overall I enjoyed my experience with Next but may not use it for every project going forward. Learning about the differences between server and client side rendering to optimize SEO load times and SEO was very interesting but a bit confusing at times. I felt like it abstracted some of what made coding a Node/Express server fun but it did help me work quicker. I would use it again in the future but would like the push the limits of a pure Node backend first. 
-* **TypeScript**: I enjoyed the developer benefits but it felt like overkill. In some instances where I found myself doing code gynmnastics just to get the annotations to work, I just ended up using "type: any" and moving on. I definitely think TS could add to a bigger or longer term project, it didn't match the scope of this project well.
+* **NextJS**: Overall I enjoyed my experience with Next but may not use it for every project going forward. Learning about the differences between server and client side rendering to optimize load times and SEO was very interesting but a bit confusing at times. I felt like it abstracted some of what made coding a Node/Express server fun but it did help me work quicker. I would use it again in the future but would like the push the limits of a pure Node backend first. 
+* **TypeScript**: I enjoyed the developer benefits but it felt like overkill for this project; I think it would be great for a collaborative and/or larger scale project. In some instances where I found myself doing code gynmnastics just to get the annotations to work, which was a bit of a hassle. 
 * **Tailwind**: I still really enjoy tailwind for quick projects; being able to stay anchored in one folder helps me get into a flow easier than plain CSS.
 * **Firebase**: The auth and storage were easy to set up, only requiring a bit of tweaking to work with my Next project. I would definitely consider using it again for future projects. Overall I'm glad I decided to use it and I feel much more confident moving to more complete cloud solutions like AWS or GCP.
 * **Stripe API**: It was very intuitive to use and I am 100% using it again in the future. I want to try an alternative offering like shopify as well, but I had no issues and it was easy to use.
@@ -30,7 +30,7 @@ Most of the tech decisions were either frameworks I've heard great things about 
 
 Firstly, I couldn't find any decent data sets for an ecommerce site. I really wanted to implement my own backend instead of just relying on shopify or a pre-existing API (most of which were just random items). I wanted to emulate a clothing store because I wanted it to be very close to the actual use case. My solution was using a kaggle dataset of images and adding the rest of the data information manually.
 
-NextJS had a small learning curve based. I don't love how routing works within the new app router with NextJS 13; I felt like I had a million page files open in VSCode. I'm sure there's a workaround but I think the issues would just get worse on a larger scale project. 
+NextJS had a small learning curve; the folder based routing of NextJS 13 was interesting but it felt a bit cluttered in VSCode. 
 
 ## Future Updates
 
